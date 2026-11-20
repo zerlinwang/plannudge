@@ -40,27 +40,27 @@
   const STEPS = [
     {
       title: "1. The frozen planner makes a base plan",
-      text: "The pretrained diffusion-based planner reads the scene and denoises Gaussian noise into a plan in K steps. Its weights never change. PlanNudge treats the planner as a part of the environment.",
+      text: "The pretrained diffusion-based planner denoises a plan in K steps. Its weights never change.",
       box: [1.5, 11, 28.5, 35],
     },
     {
       title: "2. The nudge policy outputs two numbers",
-      text: "The nudge policy is an MLP. Its inputs are the ego state, the pooled features of the frozen scene encoder, and the beginning of the base plan. One forward pass outputs a nudge: a speed offset and a curvature offset, both bounded.",
+      text: "An MLP reads the ego state, the pooled scene features, and the beginning of the base plan. One forward pass outputs a speed offset and a curvature offset.",
       box: [6, 53.5, 41.5, 23],
     },
     {
       title: "3. The plan transform applies the nudge",
-      text: "A fixed transform changes the speed and bends the path of the base plan. The transform has no learned parameters. A zero nudge returns the base plan exactly.",
+      text: "A fixed transform, without learned parameters, applies the two offsets to the base plan. A zero nudge returns the base plan exactly.",
       box: [36, 11, 29, 35],
     },
     {
       title: "4. The simulator executes the nudged plan",
-      text: "The tracker follows the nudged plan for 0.1 s. Then the planner makes a new plan. The reward is the closed-loop score of the driven trajectory, plus a small safety penalty at every step.",
+      text: "The tracker follows the nudged plan for 0.1 s. The reward is the closed-loop score, plus a small safety penalty at every step.",
       box: [71, 11, 28.5, 35],
     },
     {
       title: "5. Off-policy RL trains the nudge policy",
-      text: "Each transition is stored in a replay buffer. TD3 updates a critic with n-step returns and updates the nudge policy to maximize the critic's value. No update calls the denoising process.",
+      text: "TD3 trains the critic and the nudge policy from a replay buffer. No update calls the denoising process.",
       box: [0.5, 49.5, 99, 50],
     },
   ];

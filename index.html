@@ -39,8 +39,7 @@
   <figure>
     <div class="crop-curve" role="img" aria-label="Improvement on Val14 R against environment steps. PlanNudge reaches the gain that PlannerRFT reports at 40 M steps after about 1.3 M steps."></div>
     <figcaption>
-      <b>Sample efficiency.</b> Improvement of the Val14 R score against environment steps, in our simulator. Mean and standard deviation over six runs.
-      PlanNudge reaches the gain that PlannerRFT reports after 40 M steps (+1.52) after about 1.3 M steps. This is 30 times fewer steps.
+      <b>Sample efficiency.</b> PlanNudge reaches the Val14 R gain that PlannerRFT reports after 40 M steps with about 1.3 M steps.
     </figcaption>
   </figure>
   <figure>
@@ -82,9 +81,7 @@
   <div class="card">
     <h3>Difficulty 1: iterative denoising</h3>
     <p>
-      A diffusion-based planner produces one plan with <em>K</em> denoising steps, so the likelihood of the plan is intractable.
-      Policy-gradient methods therefore treat every denoising step as one RL action. This multiplies the RL horizon by <em>K</em>, here <em>K</em> = 10.
-      Value-based methods backpropagate the critic's gradient through all <em>K</em> steps, which is costly and can destabilize training.
+      A plan comes from <em>K</em> denoising steps. Policy-gradient methods treat every step as one RL action, so the RL horizon becomes <em>K</em> times longer. Here <em>K</em> = 10.
     </p>
     <div class="dn">
       <div class="dn-row">
@@ -110,11 +107,8 @@
   <div class="card">
     <h3>Difficulty 2: receding-horizon execution</h3>
     <p>
-      The planner outputs a plan of 8 seconds, which is 80 waypoints.
-      The tracker converts the plan into one control command, an acceleration and a steering rate, and applies it for 0.1 seconds. Then the planner makes a new plan.
-      We measured on the nuPlan tracker how strongly each dimension of a plan changes this command:
-      the first 1.5 seconds of the plan carry more than 98 % of the influence, and the dimensions after 2 seconds carry almost none.
-      If the action is the whole plan, most of its 240 dimensions have almost no effect on the vehicle. This makes value learning hard.
+      The planner outputs 80 waypoints (8 s), but the tracker applies one control command for 0.1 s before the next plan arrives.
+      Measured on the nuPlan tracker, the first 1.5 s of a plan carry more than 98 % of the influence on this command.
     </p>
     <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan changes the control command."></svg>
     <div class="dn">
@@ -128,67 +122,49 @@
       </div>
     </div>
     <p class="dn-total">
-      Finetuning the planner: the action space has <b>240 dimensions</b>, and only the dimensions of about the first 15 waypoints change the control command.
-      PlanNudge: the action space has <b class="accent">2 dimensions</b>. The plan transform applies them to the beginning of the plan before the tracker receives it.
-      The speed offset changes the acceleration command, and the curvature offset changes the steering rate command.
+      Finetuning the planner: <b>240 dimensions</b>, and most of them have almost no effect on the command.
+      PlanNudge: <b class="accent">2 dimensions</b>, and both change the command.
     </p>
     <p class="legend">
       <span class="key outline"></span> the action space
-      <span class="key scale"></span> influence of a dimension on the control command, measured: from none (grey) to strong (dark)
+      <span class="key scale"></span> influence on the control command, measured: none (grey) to strong (dark)
     </p>
   </div>
 
   <h3>How do existing methods handle the two difficulties?</h3>
-  <ul class="handles">
-    <li>
-      <b>Iterative denoising: accepted, at the cost of a longer horizon.</b>
-      Existing methods model the denoising process as a Markov decision process, in which each denoising step is one decision.
-      This enables policy-gradient training, but the RL horizon becomes <em>K</em> times longer.
-    </li>
-    <li>
-      <b>Receding-horizon execution: avoided, with open-loop scores.</b>
-      Existing methods do not train the planner on closed-loop scores.
-      They score whole plans in open loop, in logged states (a) or, as PlannerRFT does, in states from closed-loop rollouts (b).
-      An open-loop score is not the closed-loop score of the driven trajectory.
-    </li>
-  </ul>
+  <p>All existing methods finetune the diffusion-based planner itself, which is where both difficulties arise.</p>
   <figure>
     <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
-    <figcaption>
-      (a) Open-loop finetuning from logs. (b) Open-loop finetuning from closed-loop rollouts, as in PlannerRFT.
-      (c) PlanNudge freezes the planner, nudges its plan with a one-step MLP, and trains the MLP on the closed-loop score.
-    </figcaption>
   </figure>
-  <p>
-    All these methods finetune the diffusion-based planner itself, which is where both difficulties arise.
-  </p>
+  <details class="fold">
+    <summary>How existing methods handle each difficulty</summary>
+  <ul class="handles">
+    <li><b>Iterative denoising:</b> modeled as a Markov decision process, at the cost of a <em>K</em> times longer RL horizon.</li>
+    <li><b>Receding-horizon execution:</b> avoided. Plans are scored in open loop, in logged states (a) or, as PlannerRFT does, in states from closed-loop rollouts (b). An open-loop score is not the closed-loop score.</li>
+  </ul>
+  </details>
   <p class="question">Can we post-train a diffusion-based planner without finetuning it?</p>
 
   <h3>A first test: random nudges</h3>
-  <p>
-    We keep the planner fixed and add small random adjustments to the speed and the curvature of its plans.
-    We test this on the 72 Val14 scenarios in which the pretrained Diffusion Planner fails.
-  </p>
-  <div class="fig-row">
-    <figure>
-      <img src="assets/figs/analysis_saves.svg" alt="Fraction of failed scenarios that succeed at least once, against the number of rollouts.">
-      <figcaption>Fraction of the 72 failed scenarios in which at least one rollout reaches a score of at least 50. Solid lines: random nudges at three noise scales. Dashed line: the planner sampled again without a nudge.</figcaption>
-    </figure>
-    <div class="facts">
-      <div><b>53 %</b><span>of the failed scenarios reach a score of at least 50 in at least one of 20 rollouts <em>with random nudges</em></span></div>
-      <div><b>2 of 72</b><span>scenarios do this when the planner is only <em>sampled again</em> with new diffusion noise, even with 50 rollouts</span></div>
-    </div>
+  <p>Small random nudges to the plans of the fixed planner save more than half of its failures. Sampling the planner again saves almost none.</p>
+  <div class="facts pair">
+    <div><b>53 %</b><span>saved in at least one of 20 rollouts <em>with random nudges</em></span></div>
+    <div><b>2 of 72</b><span>saved when the planner is only <em>sampled again</em>, even with 50 rollouts</span></div>
   </div>
-  <p>
-    So a small adjustment of speed and curvature is often enough. A learned policy only has to find the right adjustment.
-  </p>
+  <details class="fold">
+    <summary>Setup and figure</summary>
+    <p>We keep the planner fixed and add small random nudges to its plans, in the 72 Val14 scenarios that the pretrained planner fails.</p>
+    <figure class="fig-mid">
+      <img src="assets/figs/analysis_saves.svg" alt="Fraction of failed scenarios that succeed at least once, against the number of rollouts.">
+      <figcaption>Failed scenarios saved at least once, against the number of rollouts.</figcaption>
+    </figure>
+  </details>
 </section>
 
 <section id="try">
   <h2>Try it: nudge a plan yourself</h2>
   <p>
-    The gray dashed line is the base plan of the frozen planner. With this plan, the vehicle hits a pedestrian.
-    Move the two sliders: the orange line shows the nudged plan. These two numbers are the complete action space of PlanNudge.
+    The grey dashed line is the base plan, which hits a pedestrian. Move the two sliders, the complete action space of PlanNudge, to nudge it.
   </p>
 
   <div class="card widget">
@@ -229,20 +205,19 @@
     </div>
   </div>
 
-  <p class="note">
-    <b>What this demo shows.</b> The transform is the one in the paper: the speed offset grows over 1.1 s and then stays constant, and the curvature offset bends the first 1.5 s of the plan.
-    The button applies the largest offsets that the trained policy used in the pedestrian video above (−0.36 m/s and +0.012 m⁻¹).
-    <b>What it does not show.</b> The scene is illustrative, and the demo applies one nudge to one plan.
-    In closed loop, the vehicle follows a plan for 0.1 s, the planner makes a new plan, and the nudge policy outputs a new nudge.
-    For this reason the far part of a nudged plan, which here leaves the lane, is never driven.
-  </p>
+  <details class="fold">
+    <summary>About this demo</summary>
+    <p class="note">
+      Illustrative scene with the plan transform of the paper. The button applies the largest offsets of the trained policy in the pedestrian video (−0.36 m/s, +0.012 m⁻¹).
+      In closed loop, the policy outputs a new nudge every 0.1 s, so the far part of a nudged plan is never driven.
+    </p>
+  </details>
 </section>
 
 <section id="method">
   <h2>How PlanNudge works</h2>
   <p>
-    The frozen planner, the plan transform, and the simulator form the environment.
-    The nudge policy and its critic form the agent. Select a step.
+    The frozen planner, the plan transform, and the simulator form the environment. The nudge policy and its critic form the agent.
   </p>
   <div class="tabs" id="method-tabs" role="tablist"></div>
   <p class="step-text" id="method-text"></p>
@@ -255,9 +230,9 @@
 
   <h3>Why this design removes both difficulties</h3>
   <ul>
-    <li><b>Iterative denoising.</b> The nudge policy makes one decision per plan in one forward pass, for any number of denoising steps. Standard off-policy RL applies directly.</li>
-    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the control command of the tracker. The critic assigns credit to 2 dimensions, not to 240.</li>
-    <li><b>The pretrained planner is preserved.</b> The planner keeps its multimodal distribution over maneuvers. A zero nudge returns the plan of the pretrained planner exactly, and the nudge policy outputs a zero nudge before training.</li>
+    <li><b>Iterative denoising.</b> One decision per plan, in one forward pass.</li>
+    <li><b>Receding-horizon execution.</b> The critic assigns credit to 2 dimensions, not to 240.</li>
+    <li><b>The pretrained planner is preserved.</b> A zero nudge returns its plan exactly.</li>
   </ul>
 </section>
 
@@ -292,60 +267,54 @@
   </div>
   <p class="caption">
     <b>Closed-loop scores on nuPlan, official devkit.</b> NR: non-reactive traffic. R: reactive traffic.
-    All RL methods start from the Diffusion Planner (DDIM). Our rows show the mean and the standard deviation over six runs, and below them the change against the pretrained planner.
-    Bold: the highest RL post-training result in each setting. Blue: an improvement of more than 1 point. Red: worse than the pretrained planner.
+    Our rows: mean ± standard deviation over six runs, and the change against the pretrained planner.
   </p>
 
   <h3>What matters for off-policy RL</h3>
-  <p>The curves show the change of the Val14 score during training, for PlanNudge and for three variants, in our simulator.</p>
-  <figure class="fig-mid">
-    <img src="assets/figs/curves_val14.svg" alt="Learning curves on Val14 for PlanNudge and three variants.">
-  </figure>
   <div class="takeaways">
-    <div><b>Shape the reward</b>A small safety penalty at every step gives a higher score than the terminal score alone.</div>
-    <div><b>Use multi-step returns</b>With 1-step returns, most of the gain disappears.</div>
-    <div><b>Use temporally correlated exploration noise</b>Independent Gaussian noise gives a lower gain.</div>
+    <div><b>Shape the reward</b>A small safety penalty at every step.</div>
+    <div><b>Use multi-step returns</b>1-step returns lose most of the gain.</div>
+    <div><b>Use temporally correlated noise</b>Independent Gaussian noise gains less.</div>
   </div>
+  <details class="fold">
+    <summary>Learning curves on Val14</summary>
+    <figure class="fig-mid">
+      <img src="assets/figs/curves_val14.svg" alt="Learning curves on Val14 for PlanNudge and three variants.">
+      <figcaption>Change of the Val14 score during training, for PlanNudge and three variants, in our simulator.</figcaption>
+    </figure>
+  </details>
 
   <h3>Speed events: off-policy RL can learn from scripted experience for specific failures</h3>
-  <p>
-    Two failures of the pretrained planner recur.
-    In the first, the planner keeps waiting behind a vehicle that has already moved on. This stall is known as the <em>inertia problem</em> of behavior cloning.
-    In the second, the planner does not slow down for a slower vehicle ahead.
-    With a limited budget of environment steps, exploration rarely finds the maneuver that avoids them.
-  </p>
-  <p>
-    Off-policy RL can learn from any experience: the critic values a stored transition regardless of the policy that generated the action.
-    In half of the collected episodes, we therefore execute a scripted <em>speed event</em>: a push, which is a speed increase held for seconds, or a brake held for seconds.
-    The replay buffer stores these transitions like any other transition.
-    The critic learns the value of the maneuver, and the nudge policy adopts it where the critic values it.
-  </p>
-  <div class="fig-mid">
-    <table class="small-table">
-      <thead>
-        <tr><th>Change on Test14-hard R</th><th>Without events</th><th>+ Speed events (ours)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Stalls released</td><td>9 %</td><td>29 %</td></tr>
-        <tr><td>Progress gate</td><td>−0.1</td><td>+0.9</td></tr>
-        <tr><td>Progress</td><td>+0.2</td><td>+0.3</td></tr>
-        <tr><td>Collision</td><td>+1.2</td><td>+1.7</td></tr>
-        <tr><td>Time-to-collision</td><td>+1.9</td><td>+2.1</td></tr>
-        <tr class="group"><td>Score</td><td>+3.25<small>±0.34</small></td><td><b>+4.55</b><small>±0.64</small></td></tr>
-      </tbody>
-    </table>
-    <p class="caption">
-      <b>The importance of speed events, our simulator.</b> Change over the pretrained planner on Test14-hard R, the setting with the lowest scores.
-      With speed events, the policy releases more stalls, the progress gate rises, and the score gains more.
+  <p>Scripted pushes and brakes in half of the collected episodes raise the gain on Test14-hard R from +3.25 to <b>+4.55</b>.</p>
+  <details class="fold">
+    <summary>Why it works, and the table</summary>
+    <p>
+      The pretrained planner often keeps waiting behind a vehicle that has moved on (the <em>inertia problem</em>), and exploration rarely finds the push that fixes it.
+      Off-policy RL can learn from any stored transition, so we execute a scripted push or brake, a <em>speed event</em>, in half of the collected episodes.
     </p>
-  </div>
+    <div class="fig-mid">
+      <table class="small-table">
+        <thead>
+          <tr><th>Change on Test14-hard R</th><th>Without events</th><th>+ Speed events (ours)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stalls released</td><td>9 %</td><td>29 %</td></tr>
+          <tr><td>Progress gate</td><td>−0.1</td><td>+0.9</td></tr>
+          <tr><td>Progress</td><td>+0.2</td><td>+0.3</td></tr>
+          <tr><td>Collision</td><td>+1.2</td><td>+1.7</td></tr>
+          <tr><td>Time-to-collision</td><td>+1.9</td><td>+2.1</td></tr>
+          <tr class="group"><td>Score</td><td>+3.25<small>±0.34</small></td><td><b>+4.55</b><small>±0.64</small></td></tr>
+        </tbody>
+      </table>
+      <p class="caption">Change over the pretrained planner on Test14-hard R, in our simulator.</p>
+    </div>
+  </details>
 </section>
 
 <section id="videos">
   <h2>Visualizations</h2>
   <p>
-    Each video shows the same scenario twice: the pretrained planner (top) and PlanNudge (bottom).
-    Gray: the pretrained planner. Orange: PlanNudge. Dashed lines: plans, drawn for their first 4 s. Solid lines: driven paths.
+    Top: the pretrained planner. Bottom: PlanNudge.
   </p>
   <div class="tabs" id="video-tabs" role="tablist"></div>
   <figure>

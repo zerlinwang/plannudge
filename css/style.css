@@ -114,7 +114,7 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 input[type="range"] { width: 100%; accent-color: var(--orange); }
 
 .handles li { margin-bottom: 12px; }
-.handles li > b { display: block; color: var(--ink); }
+.handles li > b { color: var(--ink); }
 
 /* a figure beside a short column of facts, a figure of medium width, and a row of short takeaways */
 .fig-row { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: center; margin: 18px 0; }
@@ -129,6 +129,15 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .takeaways div { background: var(--panel); border-radius: 10px; padding: 14px 16px; font-size: 0.95rem; line-height: 1.5; }
 .takeaways b { display: block; color: var(--ink); margin-bottom: 4px; }
 #results h3 { margin-top: 40px; }
+
+/* additional information that the reader can open */
+.fold { margin: 14px 0 18px; border: 1px solid var(--line); border-radius: 8px; padding: 0 16px; background: #fff; }
+.fold summary { padding: 10px 0; cursor: pointer; font-size: 0.95rem; font-weight: 600; color: var(--blue); }
+.fold summary:hover { text-decoration: underline; }
+.fold[open] { padding-bottom: 12px; }
+.fold[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.fold .note { margin: 0; }
+.facts.pair { grid-template-columns: 1fr 1fr; margin: 14px 0; }
 
 /* ---------- difficulty 1 ---------- */
 .dn { margin: 14px 0 10px; }
@@ -201,7 +210,7 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 
 /* ---------- method ---------- */
-.step-text { min-height: 4.8em; background: var(--panel); border-radius: 8px; padding: 14px 16px; }
+.step-text { min-height: 3.2em; background: var(--panel); border-radius: 8px; padding: 14px 16px; }
 .figure-overlay { position: relative; }
 #method-highlight {
   position: absolute; border: 3px solid var(--orange); border-radius: 10px; pointer-events: none;
@@ -247,7 +256,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
 
 @media (max-width: 720px) {
   body { font-size: 16px; }
-  .two-col, .controls, .stats, .fig-row, .takeaways { grid-template-columns: 1fr; }
+  .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
 }
