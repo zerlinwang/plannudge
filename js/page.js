@@ -6,6 +6,8 @@
   const teaser = $("teaser-video");
   teaser.defaultPlaybackRate = 2;
   teaser.playbackRate = 2;
+  // No browser controls: their dark bar covers the curves. A click pauses or resumes the video.
+  teaser.addEventListener("click", () => (teaser.paused ? teaser.play() : teaser.pause()));
 
   // ---------- How PlanNudge works: steps over the method figure ----------
   // box = [left, top, width, height] in percent of the figure
