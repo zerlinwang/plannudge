@@ -32,7 +32,21 @@
     On nuPlan, PlanNudge matches or exceeds the state-of-the-art RL finetuning method in all six settings, with about one sixth of the environment steps and less than one fifth of the model compute.
   </div>
   <figure>
-    <video id="teaser-video" src="assets/videos/fig04b_pedestrians.mp4" controls muted loop autoplay playsinline></video>
+    <!-- The overlay replaces the title and the legend that are drawn inside the video file. Positions are in percent of the video frame. -->
+    <div class="video-overlay">
+      <video id="teaser-video" src="assets/videos/fig04b_pedestrians.mp4" controls controlslist="nofullscreen" disablepictureinpicture muted loop autoplay playsinline></video>
+      <div class="vo-strip"></div>
+      <div class="vo-legend">
+        <span class="vo-group"><b class="vo-gray">Pretrained planner</b>
+          <i class="vo-line dashed vo-gray"></i> plan (first 4 s)
+          <i class="vo-line vo-gray"></i> driven path</span>
+        <span class="vo-group"><b class="vo-orange">PlanNudge</b>
+          <i class="vo-line dashed vo-orange"></i> plan (first 4 s)
+          <i class="vo-line vo-orange"></i> driven path</span>
+      </div>
+      <span class="vo-fail" style="left: 39.2%">pretrained planner fails</span>
+      <span class="vo-fail" style="left: 89.8%">pretrained planner fails</span>
+    </div>
     <figcaption>
       Starting from the plan of the frozen planner, the speed offset lowers the speed and the curvature offset steers left, so that the vehicle does not drive into the pedestrians.
       Top: the pretrained planner. Bottom: PlanNudge. Shown at 2× speed.

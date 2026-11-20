@@ -58,6 +58,25 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .tldr strong { color: var(--orange); margin-right: 6px; }
 #tldr { margin-top: 40px; }
 
+/* ---------- overlay on the top video ---------- */
+.video-overlay { position: relative; container-type: inline-size; }
+.vo-strip, .vo-legend { position: absolute; left: 0; background: #fff; pointer-events: none; }
+.vo-strip { top: 3.8%; width: 99.8%; height: 3.5%; }                 /* covers the old legend row */
+.vo-legend {                                                          /* covers the old title, not the clock */
+  top: 0.1%; width: 86%; height: 7.2%; border-top-left-radius: 6px;
+  display: flex; align-items: center; justify-content: center; gap: 3.5cqw;
+  font-size: 1.45cqw; line-height: 1; color: #333; white-space: nowrap;
+}
+.vo-legend b { margin-right: 0.6cqw; }
+.vo-gray { color: #777; border-color: #777; }
+.vo-orange { color: #e8842a; border-color: #e8842a; }
+.vo-line { display: inline-block; width: 2.6cqw; border-top: 0.28cqw solid; vertical-align: middle; margin: 0 0.3cqw 0 0.9cqw; }
+.vo-line.dashed { border-top-style: dashed; }
+.vo-fail {
+  position: absolute; top: 71.3%; transform: translateX(-50%); pointer-events: none;
+  font-size: 1.2cqw; line-height: 1.6; color: #b0281c; white-space: nowrap;
+}
+
 /* ---------- shared pieces ---------- */
 .card { border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin: 22px 0; background: #fff; }
 .card h3 { margin-top: 0; }
