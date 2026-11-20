@@ -83,25 +83,28 @@
     <p>
       A plan comes from <em>K</em> denoising steps. Policy-gradient methods treat every step as one RL action, so the RL horizon becomes <em>K</em> times longer. Here <em>K</em> = 10.
     </p>
-    <div class="dn">
-      <div class="dn-row">
-        <div class="dn-label">Finetuning the planner<small id="denoise-finetune-count"></small></div>
-        <div class="dn-boxes" id="denoise-finetune"></div>
-      </div>
-      <div class="dn-row">
-        <div class="dn-label">PlanNudge<small>1 RL decision per plan</small></div>
-        <div class="dn-boxes" id="denoise-ours"></div>
-      </div>
-    </div>
     <p class="dn-total">RL horizon of one episode with 150 planning steps:</p>
     <ul class="dn-list">
       <li>Finetuning the planner: <b id="denoise-finetune-total"></b></li>
       <li>PlanNudge: <b class="accent" id="denoise-ours-total"></b></li>
     </ul>
-    <p class="legend">
-      <span class="key action"></span> an RL action
-      <span class="key frozen"></span> frozen, a part of the environment
-    </p>
+    <details class="fold">
+      <summary>Diagram</summary>
+      <div class="dn">
+        <div class="dn-row">
+          <div class="dn-label">Finetuning the planner<small id="denoise-finetune-count"></small></div>
+          <div class="dn-boxes" id="denoise-finetune"></div>
+        </div>
+        <div class="dn-row">
+          <div class="dn-label">PlanNudge<small>1 RL decision per plan</small></div>
+          <div class="dn-boxes" id="denoise-ours"></div>
+        </div>
+      </div>
+      <p class="legend">
+        <span class="key action"></span> an RL action
+        <span class="key frozen"></span> frozen, a part of the environment
+      </p>
+    </details>
   </div>
 
   <div class="card">
@@ -110,39 +113,42 @@
       The planner outputs 80 waypoints (8 s), but the vehicle follows each plan for only 0.1 s before the next plan arrives.
       Only the beginning of a plan matters for what the vehicle does.
     </p>
-    <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan changes the control command."></svg>
-    <div class="dn">
-      <div class="dn-row">
-        <div class="dn-label">Finetuning the planner<small class="space">Action space: 240-D</small><small>80 × (x, y, heading)</small></div>
-        <div class="cells" id="horizon-cells" aria-hidden="true"></div>
-      </div>
-      <div class="dn-row">
-        <div class="dn-label">PlanNudge<small class="space">Action space: 2-D</small><small>speed offset, curvature offset</small></div>
-        <div class="cells two" aria-hidden="true"><div class="pair"><span class="executed"></span><span class="executed"></span></div></div>
-      </div>
-    </div>
     <p class="dn-total">
       Finetuning the planner: <b>240 dimensions</b>, and most of them are discarded.
       PlanNudge: <b class="accent">2 dimensions</b>, and both matter.
     </p>
-    <p class="legend">
-      <span class="key outline"></span> the action space
-      <span class="key executed"></span> matters for what the vehicle does next
-      <span class="key replaced"></span> mostly discarded: the next plan replaces it
-    </p>
+    <details class="fold">
+      <summary>Animation and diagram</summary>
+      <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan changes the control command."></svg>
+      <div class="dn">
+        <div class="dn-row">
+          <div class="dn-label">Finetuning the planner<small class="space">Action space: 240-D</small><small>80 × (x, y, heading)</small></div>
+          <div class="cells" id="horizon-cells" aria-hidden="true"></div>
+        </div>
+        <div class="dn-row">
+          <div class="dn-label">PlanNudge<small class="space">Action space: 2-D</small><small>speed offset, curvature offset</small></div>
+          <div class="cells two" aria-hidden="true"><div class="pair"><span class="executed"></span><span class="executed"></span></div></div>
+        </div>
+      </div>
+      <p class="legend">
+        <span class="key outline"></span> the action space
+        <span class="key executed"></span> matters for what the vehicle does next
+        <span class="key replaced"></span> mostly discarded: the next plan replaces it
+      </p>
+    </details>
   </div>
 
   <h3>How do existing methods handle the two difficulties?</h3>
-  <p>All existing methods finetune the diffusion-based planner itself, which is where both difficulties arise.</p>
-  <figure>
-    <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
-  </figure>
-  <details class="fold">
-    <summary>How existing methods handle each difficulty</summary>
   <ul class="handles">
     <li><b>Iterative denoising:</b> modeled as a Markov decision process, at the cost of a <em>K</em> times longer RL horizon.</li>
     <li><b>Receding-horizon execution:</b> avoided. Plans are scored in open loop, in logged states (a) or, as PlannerRFT does, in states from closed-loop rollouts (b). An open-loop score is not the closed-loop score.</li>
   </ul>
+  <p>All existing methods finetune the diffusion-based planner itself, which is where both difficulties arise.</p>
+  <details class="fold">
+    <summary>Figure: the three approaches (a), (b), (c)</summary>
+    <figure>
+      <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
+    </figure>
   </details>
   <p class="question">Can we post-train a diffusion-based planner without finetuning it?</p>
 
