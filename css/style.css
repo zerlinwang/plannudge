@@ -122,6 +122,8 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .dn-box.frozen { background: #eef2f7; border: 1px solid #c5d0de; color: #6b7a90; }
 .dn-frozen { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px dashed var(--blue); border-radius: 2px; }
 .dn-total { margin: 0; }
+.dn-list { margin: 4px 0 10px; }
+.dn-list li { margin-bottom: 2px; }
 
 /* ---------- difficulty 2 ---------- */
 .scene { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #f3f4f6; }
