@@ -179,9 +179,13 @@
     for (let k = 4; k < SCENE.shownSteps; k += 5)
       el("circle", { cx: nudged[k][0], cy: nudged[k][1], r: 0.22, class: "w-dot" }, nudgedDots);
 
+    // With a zero nudge the nudged plan equals the base plan. It is hidden, so that the base plan is visible.
+    const zero = dv === 0 && dk === 0;
+    nudgedPath.style.display = nudgedDots.style.display = zero ? "none" : "";
+
     const c = clearance(nudged);
     clear(ghost);
-    if (!playing) egoBox(ghost, nudged[c.step], "w-ghost" + (c.distance < 0 ? " hit" : ""));
+    if (!playing && !zero) egoBox(ghost, nudged[c.step], "w-ghost" + (c.distance < 0 ? " hit" : ""));
 
     $("nudge-speed-value").textContent = (dv > 0 ? "+" : dv < 0 ? "−" : "") + Math.abs(dv).toFixed(2) + " m/s";
     $("nudge-curv-value").textContent =

@@ -145,7 +145,7 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .w-road { fill: var(--road); }
 .w-edge { stroke: var(--road-edge); stroke-width: 0.14; }
 .w-divider { stroke: #fff; stroke-width: 0.16; stroke-dasharray: 2 2; }
-.w-base { fill: none; stroke: var(--gray); stroke-width: 0.22; stroke-dasharray: 0.7 0.5; }
+.w-base { fill: none; stroke: #6b7280; stroke-width: 0.26; stroke-dasharray: 0.7 0.5; }
 .w-nudged { fill: none; stroke: var(--orange); stroke-width: 0.3; stroke-linejoin: round; }
 .w-dot { fill: var(--orange); }
 .w-ped { fill: #f5a04a; stroke: #c9731c; stroke-width: 0.08; }
