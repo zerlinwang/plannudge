@@ -24,15 +24,11 @@
 
   // ---------- Difficulty 2: receding-horizon execution ----------
   const cells = $("horizon-cells");
-  // Measured influence of each plan dimension on the command of the nuPlan LQR tracker (acceleration, steering rate),
-  // relative to the largest influence. Order: waypoint 1 (x, y, heading), waypoint 2, ... The dimensions after this
-  // list have an influence below 0.005. Measured with tools/tracker_sensitivity.py on the base plan of the widget.
-  const INFLUENCE = [0, 0, 0.14, 0, 0, 0.21, 0.01, 0, 0.26, 0.03, 0, 0.29, 0.04, 0, 0.32, 0.01, 0, 0.36, 0.15, 0, 0.41, 0.51, 0.02, 0.51, 0.98, 0.03, 0.69, 1, 0.03, 1, 1, 0.03, 0.55, 0.98, 0.03, 0.31, 0.51, 0.02, 0.17, 0.15, 0, 0.09, 0, 0, 0.05, 0.04, 0, 0.03, 0.03, 0, 0.02, 0.01, 0, 0.01];
-  const mix = (a, b, t) => Math.round(a + (b - a) * t);
+  // The first 15 waypoints (1.5 s) are marked. On the nuPlan LQR tracker they carry more than 98 % of the influence
+  // on the control command (measured with tools/tracker_sensitivity.py).
   for (let i = 0; i < 240; i++) { // 80 waypoints x (x, y, heading), filled column by column
     const c = document.createElement("span");
-    const t = INFLUENCE[i] || 0;   // 0: grey (#c3c8d0), 1: dark (#1c2740)
-    c.style.background = `rgb(${mix(195, 28, t)}, ${mix(200, 39, t)}, ${mix(208, 64, t)})`;
+    if (i < 45) c.className = "executed";
     cells.appendChild(c);
   }
 

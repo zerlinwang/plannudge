@@ -107,8 +107,8 @@
   <div class="card">
     <h3>Difficulty 2: receding-horizon execution</h3>
     <p>
-      The planner outputs 80 waypoints (8 s), but the tracker applies one control command for 0.1 s before the next plan arrives.
-      Measured on the nuPlan tracker, the first 1.5 s of a plan carry more than 98 % of the influence on this command.
+      The planner outputs 80 waypoints (8 s), but the vehicle follows each plan for only 0.1 s before the next plan arrives.
+      Only the beginning of a plan matters for what the vehicle does.
     </p>
     <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan changes the control command."></svg>
     <div class="dn">
@@ -122,12 +122,13 @@
       </div>
     </div>
     <p class="dn-total">
-      Finetuning the planner: <b>240 dimensions</b>, and most of them have almost no effect on the command.
-      PlanNudge: <b class="accent">2 dimensions</b>, and both change the command.
+      Finetuning the planner: <b>240 dimensions</b>, and most of them are discarded.
+      PlanNudge: <b class="accent">2 dimensions</b>, and both matter.
     </p>
     <p class="legend">
       <span class="key outline"></span> the action space
-      <span class="key scale"></span> influence on the control command, measured: none (grey) to strong (dark)
+      <span class="key executed"></span> matters for what the vehicle does next
+      <span class="key replaced"></span> mostly discarded: the next plan replaces it
     </p>
   </div>
 
