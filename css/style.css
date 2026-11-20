@@ -88,8 +88,9 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .legend .spacer { flex: 1; }
 .key { display: inline-block; width: 16px; height: 12px; border-radius: 3px; margin-left: 10px; }
 .key:first-child { margin-left: 0; }
-.key.action, .key.executed { background: var(--orange); }
-.key.frozen { background: #e7edf5; border: 1px dashed var(--blue); }
+.key.executed { background: var(--orange); }
+.key.action { background: var(--orange-soft); border: 1px solid var(--orange); border-radius: 2px; }
+.key.frozen { background: #eef2f7; border: 1px solid #c5d0de; border-radius: 2px; }
 .key.replaced { background: #d5d8dd; }
 .key.line-base { height: 0; border-top: 3px dashed var(--gray); border-radius: 0; width: 22px; }
 .key.line-nudged { height: 0; border-top: 3px solid var(--orange); border-radius: 0; width: 22px; }
@@ -104,18 +105,17 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 input[type="range"] { width: 100%; accent-color: var(--orange); }
 
 /* ---------- difficulty 1 ---------- */
-.inline-slider { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 600; color: var(--ink); }
-.inline-slider input { width: 220px; }
 .dn { margin: 14px 0 10px; }
 .dn-row { display: grid; grid-template-columns: 190px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 .dn-label { font-weight: 600; color: var(--ink); }
+.dn-label.two-rows { grid-row: span 2; }
 .dn-label small { display: block; font-weight: 400; color: var(--muted); }
-.dn-boxes { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.dn-box { padding: 5px 9px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; }
-.dn-box.action { background: var(--orange); color: #fff; }
-.dn-box.frozen { background: #e7edf5; color: #5b6b82; }
-.dn-box.nudge { font-weight: 700; }
-.dn-frozen { display: flex; flex-wrap: wrap; gap: 6px; padding: 5px; border: 1px dashed var(--blue); border-radius: 8px; }
+.dn-boxes { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+/* diagram cells, not buttons: square corners, light fill, thin border */
+.dn-box { min-width: 30px; padding: 3px 6px; border-radius: 2px; font-size: 0.8rem; text-align: center; white-space: nowrap; cursor: default; }
+.dn-box.action { background: var(--orange-soft); border: 1px solid var(--orange); color: #a85a12; }
+.dn-box.frozen { background: #eef2f7; border: 1px solid #c5d0de; color: #6b7a90; }
+.dn-frozen { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px dashed var(--blue); border-radius: 2px; }
 .dn-total { margin: 0; }
 
 /* ---------- difficulty 2 ---------- */
@@ -127,7 +127,8 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .h-driven { fill: none; stroke: var(--orange); stroke-width: 0.7; stroke-linecap: round; }
 .h-executed { fill: none; stroke: var(--orange); stroke-width: 1.1; stroke-linecap: round; }
 .cells { display: grid; grid-template-columns: repeat(80, 1fr); gap: 1px; }
-.dn-box.wide { flex: 1; text-align: center; padding: 3px 9px; }
+.cells.two { grid-template-columns: repeat(2, 1fr); gap: 3px; }
+.cells-labels { grid-column: 2; display: grid; grid-template-columns: repeat(2, 1fr); gap: 3px; margin-top: -8px; font-size: 0.8rem; color: var(--muted); text-align: center; }
 .cells span { height: 14px; background: #d5d8dd; border-radius: 1px; }
 .cells span.executed { background: var(--orange); }
 

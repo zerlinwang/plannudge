@@ -4,31 +4,23 @@
   const EPISODE_STEPS = 150; // planning steps in one episode (15 s at 10 Hz)
 
   // ---------- Difficulty 1: iterative denoising ----------
-  const kIn = $("denoise-k");
+  const K = 10; // denoising steps in the diagram
   function box(cls, text) {
     const b = document.createElement("span");
     b.className = "dn-box " + cls;
     b.textContent = text;
     return b;
   }
-  function renderDenoise() {
-    const K = parseInt(kIn.value, 10);
-    $("denoise-k-value").textContent = K;
-    const fine = $("denoise-finetune"), ours = $("denoise-ours");
-    fine.textContent = "";
-    ours.textContent = "";
-    for (let i = 1; i <= K; i++) fine.appendChild(box("action", "denoise " + i));
-    const frozen = document.createElement("span");
-    frozen.className = "dn-frozen";
-    for (let i = 1; i <= K; i++) frozen.appendChild(box("frozen", "denoise " + i));
-    ours.appendChild(frozen);
-    ours.appendChild(box("action nudge", "nudge"));
-    $("denoise-finetune-count").textContent = K + (K === 1 ? " RL decision" : " RL decisions") + " per plan";
-    $("denoise-finetune-total").textContent = EPISODE_STEPS + " × " + K + " = " + EPISODE_STEPS * K;
-    $("denoise-ours-total").textContent = EPISODE_STEPS + " × 1 = " + EPISODE_STEPS;
-  }
-  kIn.addEventListener("input", renderDenoise);
-  renderDenoise();
+  const fine = $("denoise-finetune"), ours = $("denoise-ours");
+  for (let i = 1; i <= K; i++) fine.appendChild(box("action", i));
+  const frozen = document.createElement("span");
+  frozen.className = "dn-frozen";
+  for (let i = 1; i <= K; i++) frozen.appendChild(box("frozen", i));
+  ours.appendChild(frozen);
+  ours.appendChild(box("action nudge", "nudge"));
+  $("denoise-finetune-count").textContent = K + " denoising steps = " + K + " RL decisions per plan";
+  $("denoise-finetune-total").textContent = EPISODE_STEPS + " × " + K + " = " + EPISODE_STEPS * K;
+  $("denoise-ours-total").textContent = EPISODE_STEPS + " × 1 = " + EPISODE_STEPS;
 
   // ---------- Difficulty 2: receding-horizon execution ----------
   const cells = $("horizon-cells");

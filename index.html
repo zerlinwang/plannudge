@@ -66,12 +66,9 @@
     <h3>Difficulty 1: iterative denoising</h3>
     <p>
       A diffusion-based planner produces one plan with <em>K</em> denoising steps, so the likelihood of the plan is intractable.
-      Policy-gradient methods therefore treat every denoising step as one RL action. This multiplies the RL horizon by <em>K</em>.
+      Policy-gradient methods therefore treat every denoising step as one RL action. This multiplies the RL horizon by <em>K</em>, here <em>K</em> = 10.
       Value-based methods backpropagate the critic's gradient through all <em>K</em> steps, which is costly and can destabilize training.
     </p>
-    <label class="inline-slider">Denoising steps <em>K</em> = <output id="denoise-k-value">5</output>
-      <input id="denoise-k" type="range" min="1" max="10" value="5">
-    </label>
     <div class="dn">
       <div class="dn-row">
         <div class="dn-label">Finetuning the planner<small id="denoise-finetune-count"></small></div>
@@ -107,11 +104,9 @@
         <div class="cells" id="horizon-cells" aria-hidden="true"></div>
       </div>
       <div class="dn-row">
-        <div class="dn-label">PlanNudge<small>RL action: 2 numbers</small></div>
-        <div class="dn-boxes">
-          <span class="dn-box action nudge wide">speed offset</span>
-          <span class="dn-box action nudge wide">curvature offset</span>
-        </div>
+        <div class="dn-label two-rows">PlanNudge<small>RL action: 2 numbers</small></div>
+        <div class="cells two" aria-hidden="true"><span class="executed"></span><span class="executed"></span></div>
+        <div class="cells-labels"><span>speed offset</span><span>curvature offset</span></div>
       </div>
     </div>
     <p class="dn-total">
