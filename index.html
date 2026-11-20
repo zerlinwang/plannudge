@@ -57,10 +57,9 @@
 <section id="motivation">
   <h2>Motivation</h2>
   <p>
-    Diffusion-based planners model the many ways in which humans drive.
-    In closed-loop driving, they can still collide with other vehicles or leave the road, because their own errors lead them to states that the training data does not contain.
-    Reinforcement learning (RL) can address this problem: the planner learns from the states that it visits in simulation.
-    However, RL on a diffusion-based planner has two difficulties.
+    Diffusion-based planners model the multimodal driving behavior in human demonstrations.
+    However, they still collide or leave the road in closed-loop driving, due to covariate shift.
+    RL post-training can address this, but RL on a diffusion-based planner has two difficulties.
   </p>
 
   <div class="card">
