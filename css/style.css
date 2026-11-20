@@ -61,7 +61,7 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 
 /* ---------- overlay on the top video ---------- */
 .video-overlay { position: relative; container-type: inline-size; }
-.video-overlay video { cursor: pointer; }
+.video-overlay video, #video-player { cursor: pointer; }
 .vo-strip, .vo-legend { position: absolute; left: 0; background: #fff; pointer-events: none; }
 .vo-strip { top: 3.8%; width: 99.8%; height: 3.5%; }                 /* covers the old legend row */
 .vo-legend {                                                          /* covers the old title, not the clock */

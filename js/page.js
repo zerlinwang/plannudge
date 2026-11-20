@@ -2,34 +2,38 @@
 (function () {
   const $ = (id) => document.getElementById(id);
 
+  // The page draws its own control bar below a video. The browser controls would cover the curves
+  // with a dark bar, and they contain a volume button although the videos have no sound.
+  function controlBar(video, bar) {
+    const toggle = bar.querySelector("button"), seek = bar.querySelector("input"), time = bar.querySelector("span");
+    const clock = (t) => Math.floor(t / 60) + ":" + String(Math.floor(t % 60)).padStart(2, "0");
+    const playPause = () => (video.paused ? video.play() : video.pause());
+    const showState = () => {
+      toggle.textContent = video.paused ? "▶" : "❚❚";
+      toggle.setAttribute("aria-label", video.paused ? "Play" : "Pause");
+    };
+    const showTime = () => {
+      const d = video.duration || 0;
+      seek.value = d ? (video.currentTime / d) * 1000 : 0;
+      time.textContent = clock(video.currentTime) + " / " + clock(d);
+    };
+    video.addEventListener("click", playPause);
+    toggle.addEventListener("click", playPause);
+    video.addEventListener("play", showState);
+    video.addEventListener("pause", showState);
+    video.addEventListener("timeupdate", showTime);
+    video.addEventListener("loadedmetadata", showTime);
+    seek.addEventListener("input", () => {
+      if (video.duration) video.currentTime = (seek.value / 1000) * video.duration;
+    });
+    showState();
+  }
+
   // The video under the TL;DR plays at 2 times the normal speed.
   const teaser = $("teaser-video");
   teaser.defaultPlaybackRate = 2;
   teaser.playbackRate = 2;
-  // The page draws its own control bar below the video. The browser controls would cover the curves
-  // with a dark bar, and they contain a volume button although the video has no sound.
-  const toggle = $("teaser-toggle"), seek = $("teaser-seek"), time = $("teaser-time");
-  const clock = (t) => Math.floor(t / 60) + ":" + String(Math.floor(t % 60)).padStart(2, "0");
-  const playPause = () => (teaser.paused ? teaser.play() : teaser.pause());
-  const showState = () => {
-    toggle.textContent = teaser.paused ? "▶" : "❚❚";
-    toggle.setAttribute("aria-label", teaser.paused ? "Play" : "Pause");
-  };
-  const showTime = () => {
-    const d = teaser.duration || 0;
-    seek.value = d ? (teaser.currentTime / d) * 1000 : 0;
-    time.textContent = clock(teaser.currentTime) + " / " + clock(d);
-  };
-  teaser.addEventListener("click", playPause);
-  toggle.addEventListener("click", playPause);
-  teaser.addEventListener("play", showState);
-  teaser.addEventListener("pause", showState);
-  teaser.addEventListener("timeupdate", showTime);
-  teaser.addEventListener("loadedmetadata", showTime);
-  seek.addEventListener("input", () => {
-    if (teaser.duration) teaser.currentTime = (seek.value / 1000) * teaser.duration;
-  });
-  showState();
+  controlBar(teaser, $("teaser-bar"));
 
   // ---------- How PlanNudge works: steps over the method figure ----------
   // box = [left, top, width, height] in percent of the figure
@@ -89,6 +93,7 @@
     ["fig16_start_from_standstill", "Start from standstill", "Reactive traffic. The pretrained planner barely moves until the end of the scenario. PlanNudge increases the planned speed and departs."],
   ];
   const vTabs = $("video-tabs"), player = $("video-player");
+  controlBar(player, $("video-bar"));
   function showVideo(i) {
     const [file, , caption] = VIDEOS[i];
     player.src = "assets/videos/" + file + ".mp4";

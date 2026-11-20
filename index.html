@@ -59,10 +59,10 @@
       <span class="vo-fail" style="left: 39.2%">pretrained planner fails</span>
       <span class="vo-fail" style="left: 89.8%">pretrained planner fails</span>
     </div>
-    <div class="vbar">
-      <button type="button" id="teaser-toggle" aria-label="Pause">❚❚</button>
-      <input type="range" id="teaser-seek" min="0" max="1000" value="0" aria-label="Position in the video">
-      <span id="teaser-time">0:00 / 0:00</span>
+    <div class="vbar" id="teaser-bar">
+      <button type="button" aria-label="Play">▶</button>
+      <input type="range" min="0" max="1000" value="0" aria-label="Position in the video">
+      <span>0:00 / 0:00</span>
     </div>
     <figcaption>
       Starting from the plan of the frozen planner, the speed offset lowers the speed and the curvature offset steers left, so that the vehicle does not drive into the pedestrians.
@@ -357,7 +357,12 @@
   </p>
   <div class="tabs" id="video-tabs" role="tablist"></div>
   <figure>
-    <video id="video-player" controls muted loop playsinline preload="metadata"></video>
+    <video id="video-player" title="Click to pause or play" disablepictureinpicture muted loop playsinline preload="auto"></video>
+    <div class="vbar" id="video-bar">
+      <button type="button" aria-label="Play">▶</button>
+      <input type="range" min="0" max="1000" value="0" aria-label="Position in the video">
+      <span>0:00 / 0:00</span>
+    </div>
     <figcaption id="video-caption"></figcaption>
   </figure>
 </section>
