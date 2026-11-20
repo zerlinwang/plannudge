@@ -95,31 +95,28 @@
     <p>
       The planner outputs a plan of 8 seconds, which is 80 waypoints.
       The vehicle follows the plan for only 0.1 seconds. Then the planner makes a new plan.
-      If the RL action is the whole plan, the environment gives feedback on a very small part of the action. This makes value learning hard.
+      If the RL action is the whole plan, it has 240 dimensions, and the environment gives feedback on a very small part of them. This makes value learning hard.
     </p>
     <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan is driven."></svg>
     <div class="dn">
       <div class="dn-row">
-        <div class="dn-label">Finetuning the planner<small>RL action: 80 waypoints</small></div>
+        <div class="dn-label">Finetuning the planner<small>RL action: 240 dimensions</small><small>80 × (x, y, heading)</small></div>
         <div class="cells" id="horizon-cells" aria-hidden="true"></div>
       </div>
       <div class="dn-row">
-        <div class="dn-label two-rows">PlanNudge<small>RL action: 2 numbers</small></div>
-        <div class="cells two" aria-hidden="true"><span class="executed"></span><span class="executed"></span></div>
-        <div class="cells-labels"><span>speed offset</span><span>curvature offset</span></div>
+        <div class="dn-label">PlanNudge<small>RL action: a 2-D offset</small></div>
+        <div class="cells two" aria-hidden="true"><span class="executed"></span><span class="executed"></span><em>speed offset, curvature offset</em></div>
       </div>
     </div>
     <p class="dn-total">
-      Part of the RL action that changes the driven motion before the next plan:
-      finetuning the planner <b>1 of 80 waypoints</b>,
-      PlanNudge <b class="accent">2 of 2 numbers</b>.
-      The critic of PlanNudge assigns credit to two numbers, and both matter.
+      Dimensions of the RL action that change the driven motion before the next plan:
+      finetuning the planner <b>3 of 240</b>,
+      PlanNudge <b class="accent">2 of 2</b>.
+      The critic of PlanNudge assigns credit to a 2-D offset, and both dimensions matter.
     </p>
     <p class="legend">
       <span class="key executed"></span> changes the driven motion
       <span class="key replaced"></span> the next plan replaces this part
-      <span class="spacer"></span>
-      plans made so far: <b id="horizon-count">1</b>
     </p>
   </div>
 

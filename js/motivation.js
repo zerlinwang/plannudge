@@ -24,9 +24,9 @@
 
   // ---------- Difficulty 2: receding-horizon execution ----------
   const cells = $("horizon-cells");
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 240; i++) { // 80 waypoints x (x, y, heading), filled column by column
     const c = document.createElement("span");
-    if (i === 0) c.className = "executed";
+    if (i < 3) c.className = "executed";
     cells.appendChild(c);
   }
 
@@ -56,6 +56,8 @@
   const executed = el("polyline", { class: "h-executed" }, world);
   const car = el("g", {}, world);
   el("rect", { x: -1.1, y: -1.15, width: 5.18, height: 2.3, rx: 0.4, class: "w-ego" }, car);
+  // the counter is drawn outside the flipped group, at the top right corner
+  const counter = el("text", { x: X1 - 1.5, y: -Y1 + 2.6, class: "h-count", "text-anchor": "end" }, svg);
 
   // A plan from position x at time t. Its far part sways with time, so two consecutive plans differ.
   function plan(x, t) {
@@ -89,7 +91,7 @@
       el("polyline", { points: str(p), class: "h-old" }, oldPlans);
       while (oldPlans.childNodes.length > 4) oldPlans.removeChild(oldPlans.firstChild);
     }
-    $("horizon-count").textContent = Math.floor(t / DT) + 1;
+    counter.textContent = "plans made so far: " + (Math.floor(t / DT) + 1);
   }
 
   const duration = (END - START) / SPEED;
