@@ -57,6 +57,7 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .tldr { background: var(--orange-soft); border-left: 4px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 1.05rem; }
 .tldr strong { color: var(--orange); margin-right: 6px; }
 #tldr { margin-top: 40px; }
+#tldr .stats { margin: 16px 0 0; }
 
 /* ---------- overlay on the top video ---------- */
 .video-overlay { position: relative; container-type: inline-size; }
@@ -91,7 +92,8 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .key.executed { background: var(--ink); }
 .key.action { background: var(--orange-soft); border: 1px solid var(--orange); border-radius: 2px; }
 .key.frozen { background: #eef2f7; border: 1px solid #c5d0de; border-radius: 2px; }
-.key.replaced { background: #d5d8dd; }
+.key.replaced { background: #c3c8d0; }
+.key.outline { background: none; border: 1.5px solid var(--ink); border-radius: 1px; }
 .key.line-base { height: 0; border-top: 3px dashed var(--gray); border-radius: 0; width: 22px; }
 .key.line-nudged { height: 0; border-top: 3px solid var(--orange); border-radius: 0; width: 22px; }
 .key.box-ghost { background: none; border: 2px solid var(--orange); }
@@ -123,14 +125,16 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .h-road { fill: none; stroke: #e9ecef; stroke-width: 7; stroke-linecap: round; }
 .h-plan { fill: none; stroke: var(--gray); stroke-width: 0.45; stroke-dasharray: 1.2 0.9; }
 .h-old { fill: none; stroke: #c9cdd3; stroke-width: 0.3; stroke-dasharray: 1.2 0.9; }
-.h-driven { fill: none; stroke: var(--orange); stroke-width: 0.7; stroke-linecap: round; }
+.h-driven { fill: none; stroke: #4b5563; stroke-width: 0.7; stroke-linecap: round; }
 .h-count { font-size: 1.7px; fill: var(--muted); font-variant-numeric: tabular-nums; }
-.h-executed { fill: none; stroke: var(--orange); stroke-width: 1.1; stroke-linecap: round; }
-.cells { display: grid; grid-template-columns: repeat(80, 1fr); grid-template-rows: repeat(3, 8px); grid-auto-flow: column; gap: 1px; }
-.cells span { background: #d5d8dd; border-radius: 1px; }
+.h-executed { fill: none; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round; }
+.cells { display: grid; grid-template-columns: repeat(80, 1fr); grid-template-rows: repeat(3, 8px); grid-auto-flow: column; gap: 1px; margin: 4px; }
+.cells:not(.two), .cells .pair { outline: 1.5px solid var(--ink); outline-offset: 3px; border-radius: 1px; }
+.cells .pair { grid-column: 1; grid-row: 1 / span 2; display: grid; grid-template-rows: repeat(2, 8px); gap: 1px; }
+.cells span { background: #c3c8d0; border-radius: 1px; }
 .cells span.executed { background: var(--ink); }
 .cells.two { grid-template-rows: repeat(2, 8px); }
-.cells.two em { grid-column: 2 / -1; grid-row: 1 / span 2; align-self: center; padding-left: 10px; font-style: normal; font-size: 0.8rem; color: var(--muted); }
+.cells.two em { grid-column: 2 / -1; grid-row: 1 / span 2; align-self: center; padding-left: 14px; font-style: normal; font-size: 0.8rem; color: var(--muted); }
 
 /* ---------- widget ---------- */
 .w-road { fill: var(--road); }

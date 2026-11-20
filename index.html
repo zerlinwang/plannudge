@@ -31,6 +31,11 @@
     PlanNudge freezes a pretrained diffusion-based driving planner and trains a small MLP that nudges the speed and the curvature of each plan, so that standard off-policy RL can post-train the planner in closed loop.
     On nuPlan, PlanNudge matches or exceeds the state-of-the-art RL finetuning method in all six settings, with about one sixth of the environment steps and less than one fifth of the model compute.
   </div>
+  <div class="stats">
+    <div><b>6 of 6</b><span>nuPlan settings in which PlanNudge matches or exceeds the state-of-the-art RL finetuning method</span></div>
+    <div><b>1/6</b><span>of the environment steps: 6.2 M against 40 M</span></div>
+    <div><b>&lt; 1/5</b><span>of the model compute: 128 against at least 710 × 10<sup>15</sup> FLOPs</span></div>
+  </div>
   <figure>
     <!-- The overlay replaces the title and the legend that are drawn inside the video file. Positions are in percent of the video frame. -->
     <div class="video-overlay">
@@ -104,19 +109,18 @@
         <div class="cells" id="horizon-cells" aria-hidden="true"></div>
       </div>
       <div class="dn-row">
-        <div class="dn-label">PlanNudge<small>RL action: a 2-D offset</small></div>
-        <div class="cells two" aria-hidden="true"><span class="executed"></span><span class="executed"></span><em>speed offset, curvature offset</em></div>
+        <div class="dn-label">PlanNudge<small>RL action: 2 dimensions</small></div>
+        <div class="cells two" aria-hidden="true"><div class="pair"><span class="executed"></span><span class="executed"></span></div><em>speed offset, curvature offset</em></div>
       </div>
     </div>
     <p class="dn-total">
-      Dimensions of the RL action that change the driven motion before the next plan:
-      finetuning the planner <b>3 of 240</b>,
-      PlanNudge <b class="accent">2 of 2</b>.
-      The critic of PlanNudge assigns credit to a 2-D offset, and both dimensions matter.
+      Finetuning the planner: the policy outputs <b>240 dimensions</b>, and only 3 of them change the driven motion before the next plan.
+      PlanNudge: the policy outputs <b class="accent">2 dimensions</b>, and both change the driven motion.
     </p>
     <p class="legend">
+      <span class="key outline"></span> one RL action
       <span class="key executed"></span> changes the driven motion
-      <span class="key replaced"></span> the next plan replaces this part
+      <span class="key replaced"></span> also in the RL action, but replaced by the next plan before the vehicle drives it
     </p>
   </div>
 
@@ -236,10 +240,6 @@
 
 <section id="results">
   <h2>Results on nuPlan</h2>
-  <div class="stats">
-    <div><b>6 of 6</b><span>settings in which PlanNudge matches or exceeds PlannerRFT</span></div>
-    <div><b>6.2 M</b><span>environment steps, against 40 M for PlannerRFT</span></div>
-    <div><b>&lt; 1/5</b><span>of the model compute of PlannerRFT (128 against at least 710 × 10<sup>15</sup> FLOPs)</span></div>
   </div>
 
   <figure>
