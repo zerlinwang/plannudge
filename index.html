@@ -313,7 +313,7 @@
   </div>
   <div class="two-col top">
     <div>
-      <h3>Speed events: demonstrations of the maneuvers that avoid failures</h3>
+      <h3>Speed events: off-policy RL can learn from scripted experience for specific failures</h3>
       <p>
         Two failures of the pretrained planner recur.
         In the first, the planner keeps waiting behind a vehicle that has already moved on. This stall is known as the <em>inertia problem</em> of behavior cloning.
@@ -321,6 +321,7 @@
         With a limited budget of environment steps, exploration rarely finds the maneuver that avoids them.
       </p>
       <p>
+        Off-policy RL can learn from any experience: the critic values a stored transition regardless of the policy that generated the action.
         In half of the collected episodes, we therefore execute a scripted <em>speed event</em>: a push, which is a speed increase held for seconds, or a brake held for seconds.
         The replay buffer stores these transitions like any other transition.
         The critic learns the value of the maneuver, and the nudge policy adopts it where the critic values it.
