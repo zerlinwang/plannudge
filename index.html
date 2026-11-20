@@ -232,7 +232,7 @@
   <h3>Why this design removes both difficulties</h3>
   <ul>
     <li><b>Iterative denoising.</b> One decision per plan, in one forward pass.</li>
-    <li><b>Receding-horizon execution.</b> The critic assigns credit to 2 dimensions, not to 240.</li>
+    <li><b>Receding-horizon execution.</b> The critic assigns credit to 2 dimensions that both matter, not to 240 dimensions that are mostly discarded.</li>
     <li><b>The pretrained planner is preserved.</b> A zero nudge returns its plan exactly.</li>
   </ul>
 </section>
