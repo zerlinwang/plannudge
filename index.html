@@ -28,10 +28,12 @@
 <section id="tldr">
   <div class="tldr">
     <strong>TL;DR</strong>
-    We keep a pretrained diffusion-based driving planner frozen.
-    A small MLP, the <em>nudge policy</em>, adjusts the speed and the curvature of each plan.
-    Off-policy RL trains this MLP in closed-loop simulation.
-    On nuPlan, PlanNudge matches or exceeds the previous state-of-the-art RL finetuning method in all six settings, with about one sixth of the environment steps.
+    We find that small adjustments to the planned trajectories can prevent many unsafe outcomes of diffusion-based planners in closed-loop driving.
+    Motivated by this observation, we propose PlanNudge, which preserves the learned planning capabilities of a pretrained diffusion-based planner by freezing it and trains a lightweight policy that we call the <em>nudge policy</em>.
+    At each planning step, the nudge policy outputs a nudge, a two-dimensional adjustment of the speed and curvature of the plan from the frozen planner.
+    The nudge policy is a multilayer perceptron that predicts the nudge in a single forward pass, and both dimensions directly change the motion of the vehicle, so standard off-policy RL can train it in closed-loop simulation.
+    We evaluate PlanNudge on nuPlan, a large-scale autonomous driving benchmark based on real-world driving data.
+    In all six settings, PlanNudge matches or exceeds the final scores of the previous state-of-the-art RL finetuning method while using about one sixth as many environment steps and less than one fifth as much model compute.
   </div>
   <figure>
     <video id="teaser-video" src="assets/videos/fig04b_pedestrians.mp4" controls muted loop autoplay playsinline></video>
