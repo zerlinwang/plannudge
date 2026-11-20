@@ -91,9 +91,27 @@
       If the RL action is the whole plan, the environment gives feedback on a very small part of the action. This makes value learning hard.
     </p>
     <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan is driven."></svg>
-    <div class="cells" id="horizon-cells" aria-hidden="true"></div>
+    <div class="dn">
+      <div class="dn-row">
+        <div class="dn-label">Finetuning the planner<small>RL action: 80 waypoints</small></div>
+        <div class="cells" id="horizon-cells" aria-hidden="true"></div>
+      </div>
+      <div class="dn-row">
+        <div class="dn-label">PlanNudge<small>RL action: 2 numbers</small></div>
+        <div class="dn-boxes">
+          <span class="dn-box action nudge wide">speed offset</span>
+          <span class="dn-box action nudge wide">curvature offset</span>
+        </div>
+      </div>
+    </div>
+    <p class="dn-total">
+      Part of the RL action that changes the driven motion before the next plan:
+      finetuning the planner <b>1 of 80 waypoints</b>,
+      PlanNudge <b class="accent">2 of 2 numbers</b>.
+      The critic of PlanNudge assigns credit to two numbers, and both matter.
+    </p>
     <p class="legend">
-      <span class="key executed"></span> the vehicle drives this part: 1 of 80 waypoints
+      <span class="key executed"></span> changes the driven motion
       <span class="key replaced"></span> the next plan replaces this part
       <span class="spacer"></span>
       plans made so far: <b id="horizon-count">1</b>
