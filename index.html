@@ -252,7 +252,7 @@
   <h3>Why this design removes both difficulties</h3>
   <ul>
     <li><b>Iterative denoising.</b> The nudge policy makes one decision per plan in one forward pass, for any number of denoising steps. Standard off-policy RL applies directly.</li>
-    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the part of the plan that the vehicle drives. The critic assigns credit to two numbers, not to 80 waypoints.</li>
+    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the part of the plan that the vehicle drives. The critic assigns credit to 2 dimensions, not to 240.</li>
     <li><b>The pretrained planner is preserved.</b> The planner keeps its multimodal distribution over maneuvers. A zero nudge returns the plan of the pretrained planner exactly, and the nudge policy outputs a zero nudge before training.</li>
   </ul>
 </section>
