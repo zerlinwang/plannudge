@@ -115,6 +115,20 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .handles li { margin-bottom: 12px; }
 .handles li > b { display: block; color: var(--ink); }
 
+/* a figure beside a short column of facts, a figure of medium width, and a row of short takeaways */
+.fig-row { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: center; margin: 18px 0; }
+.fig-row figure { margin: 0; }
+.facts { display: grid; gap: 14px; }
+.facts div { background: var(--panel); border-radius: 10px; padding: 14px 18px; }
+.facts b { display: block; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+.facts span { font-size: 0.92rem; line-height: 1.45; color: var(--muted); display: block; }
+.facts em { font-style: normal; font-weight: 600; color: var(--text); }
+.fig-mid { max-width: 640px; margin: 20px auto; }
+.takeaways { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 18px 0 8px; }
+.takeaways div { background: var(--panel); border-radius: 10px; padding: 14px 16px; font-size: 0.95rem; line-height: 1.5; }
+.takeaways b { display: block; color: var(--ink); margin-bottom: 4px; }
+#results h3 { margin-top: 40px; }
+
 /* ---------- difficulty 1 ---------- */
 .dn { margin: 14px 0 10px; }
 .dn-row { display: grid; grid-template-columns: 215px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
@@ -232,7 +246,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
 
 @media (max-width: 720px) {
   body { font-size: 16px; }
-  .two-col, .controls, .stats { grid-template-columns: 1fr; }
+  .two-col, .controls, .stats, .fig-row, .takeaways { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
 }

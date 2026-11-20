@@ -163,27 +163,24 @@
   </p>
   <p class="question">Can we post-train a diffusion-based planner without finetuning it?</p>
 
-  <div class="two-col">
-    <div>
-      <h3>A first test: random nudges</h3>
-      <p>
-        We keep the planner fixed and add small random adjustments to the speed and the curvature of its plans.
-        We test this on the 72 Val14 scenarios in which the pretrained Diffusion Planner fails.
-      </p>
-      <ul>
-        <li>With random nudges, <b>53 %</b> of these scenarios reach a score of at least 50 in at least one of 20 rollouts.</li>
-        <li>Sampling the planner again with new diffusion noise, without a nudge, does this in only <b>2 of 72</b> scenarios, even with 50 rollouts.</li>
-      </ul>
-      <p>
-        So a small adjustment of speed and curvature is often enough.
-        A learned policy only has to find the right adjustment.
-      </p>
-    </div>
+  <h3>A first test: random nudges</h3>
+  <p>
+    We keep the planner fixed and add small random adjustments to the speed and the curvature of its plans.
+    We test this on the 72 Val14 scenarios in which the pretrained Diffusion Planner fails.
+  </p>
+  <div class="fig-row">
     <figure>
       <img src="assets/figs/analysis_saves.svg" alt="Fraction of failed scenarios that succeed at least once, against the number of rollouts.">
       <figcaption>Fraction of the 72 failed scenarios in which at least one rollout reaches a score of at least 50. Solid lines: random nudges at three noise scales. Dashed line: the planner sampled again without a nudge.</figcaption>
     </figure>
+    <div class="facts">
+      <div><b>53 %</b><span>of the failed scenarios reach a score of at least 50 in at least one of 20 rollouts <em>with random nudges</em></span></div>
+      <div><b>2 of 72</b><span>scenarios do this when the planner is only <em>sampled again</em> with new diffusion noise, even with 50 rollouts</span></div>
+    </div>
   </div>
+  <p>
+    So a small adjustment of speed and curvature is often enough. A learned policy only has to find the right adjustment.
+  </p>
 </section>
 
 <section id="try">
@@ -298,55 +295,48 @@
     Bold: the highest RL post-training result in each setting. Blue: an improvement of more than 1 point. Red: worse than the pretrained planner.
   </p>
 
-  <div class="two-col">
-    <figure>
-      <img src="assets/figs/curves_val14.svg" alt="Learning curves on Val14 for PlanNudge and three variants.">
-    </figure>
-    <div>
-      <h3>What matters for off-policy RL</h3>
-      <p>The curves show the change of the Val14 score during training, for PlanNudge and for three variants, in our simulator.</p>
-      <ul>
-        <li><b>Shape the reward.</b> A small safety penalty at every step gives a higher score than the terminal score alone.</li>
-        <li><b>Use multi-step returns.</b> With 1-step returns, most of the gain disappears.</li>
-        <li><b>Use temporally correlated exploration noise.</b> Independent Gaussian noise gives a lower gain.</li>
-      </ul>
-    </div>
+  <h3>What matters for off-policy RL</h3>
+  <p>The curves show the change of the Val14 score during training, for PlanNudge and for three variants, in our simulator.</p>
+  <figure class="fig-mid">
+    <img src="assets/figs/curves_val14.svg" alt="Learning curves on Val14 for PlanNudge and three variants.">
+  </figure>
+  <div class="takeaways">
+    <div><b>Shape the reward</b>A small safety penalty at every step gives a higher score than the terminal score alone.</div>
+    <div><b>Use multi-step returns</b>With 1-step returns, most of the gain disappears.</div>
+    <div><b>Use temporally correlated exploration noise</b>Independent Gaussian noise gives a lower gain.</div>
   </div>
-  <div class="two-col top">
-    <div>
-      <h3>Speed events: off-policy RL can learn from scripted experience for specific failures</h3>
-      <p>
-        Two failures of the pretrained planner recur.
-        In the first, the planner keeps waiting behind a vehicle that has already moved on. This stall is known as the <em>inertia problem</em> of behavior cloning.
-        In the second, the planner does not slow down for a slower vehicle ahead.
-        With a limited budget of environment steps, exploration rarely finds the maneuver that avoids them.
-      </p>
-      <p>
-        Off-policy RL can learn from any experience: the critic values a stored transition regardless of the policy that generated the action.
-        In half of the collected episodes, we therefore execute a scripted <em>speed event</em>: a push, which is a speed increase held for seconds, or a brake held for seconds.
-        The replay buffer stores these transitions like any other transition.
-        The critic learns the value of the maneuver, and the nudge policy adopts it where the critic values it.
-      </p>
-    </div>
-    <div>
-      <table class="small-table">
-        <thead>
-          <tr><th>Change on Test14-hard R</th><th>Without events</th><th>+ Speed events (ours)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Stalls released</td><td>9 %</td><td>29 %</td></tr>
-          <tr><td>Progress gate</td><td>−0.1</td><td>+0.9</td></tr>
-          <tr><td>Progress</td><td>+0.2</td><td>+0.3</td></tr>
-          <tr><td>Collision</td><td>+1.2</td><td>+1.7</td></tr>
-          <tr><td>Time-to-collision</td><td>+1.9</td><td>+2.1</td></tr>
-          <tr class="group"><td>Score</td><td>+3.25<small>±0.34</small></td><td><b>+4.55</b><small>±0.64</small></td></tr>
-        </tbody>
-      </table>
-      <p class="caption">
-        <b>The importance of speed events, our simulator.</b> Change over the pretrained planner on Test14-hard R, the setting with the lowest scores.
-        With speed events, the policy releases more stalls, the progress gate rises, and the score gains more.
-      </p>
-    </div>
+
+  <h3>Speed events: off-policy RL can learn from scripted experience for specific failures</h3>
+  <p>
+    Two failures of the pretrained planner recur.
+    In the first, the planner keeps waiting behind a vehicle that has already moved on. This stall is known as the <em>inertia problem</em> of behavior cloning.
+    In the second, the planner does not slow down for a slower vehicle ahead.
+    With a limited budget of environment steps, exploration rarely finds the maneuver that avoids them.
+  </p>
+  <p>
+    Off-policy RL can learn from any experience: the critic values a stored transition regardless of the policy that generated the action.
+    In half of the collected episodes, we therefore execute a scripted <em>speed event</em>: a push, which is a speed increase held for seconds, or a brake held for seconds.
+    The replay buffer stores these transitions like any other transition.
+    The critic learns the value of the maneuver, and the nudge policy adopts it where the critic values it.
+  </p>
+  <div class="fig-mid">
+    <table class="small-table">
+      <thead>
+        <tr><th>Change on Test14-hard R</th><th>Without events</th><th>+ Speed events (ours)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Stalls released</td><td>9 %</td><td>29 %</td></tr>
+        <tr><td>Progress gate</td><td>−0.1</td><td>+0.9</td></tr>
+        <tr><td>Progress</td><td>+0.2</td><td>+0.3</td></tr>
+        <tr><td>Collision</td><td>+1.2</td><td>+1.7</td></tr>
+        <tr><td>Time-to-collision</td><td>+1.9</td><td>+2.1</td></tr>
+        <tr class="group"><td>Score</td><td>+3.25<small>±0.34</small></td><td><b>+4.55</b><small>±0.64</small></td></tr>
+      </tbody>
+    </table>
+    <p class="caption">
+      <b>The importance of speed events, our simulator.</b> Change over the pretrained planner on Test14-hard R, the setting with the lowest scores.
+      With speed events, the policy releases more stalls, the progress gate rises, and the score gains more.
+    </p>
   </div>
 </section>
 
