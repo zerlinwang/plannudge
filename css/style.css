@@ -216,6 +216,11 @@ td i { display: block; font-style: normal; font-size: 0.8em; color: var(--muted)
 td i.up { color: var(--blue); }
 td i.down { color: var(--red); }
 
+table.small-table thead tr th:nth-child(n+2) { text-align: center; }
+table.small-table { font-size: 0.9rem; }
+table.small-table tbody tr td:first-child { text-align: left; }
+.two-col.top { align-items: start; margin-top: 34px; }
+
 pre { background: var(--panel); border-radius: 8px; padding: 16px; overflow-x: auto; font-size: 0.85rem; }
 footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 30px 20px 50px; border-top: 1px solid var(--line); }
 

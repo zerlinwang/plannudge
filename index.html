@@ -306,6 +306,44 @@
       </ul>
     </div>
   </div>
+  <div class="two-col top">
+    <div>
+      <h3>Speed events: demonstrations of the maneuvers that avoid failures</h3>
+      <p>
+        Two failures of the pretrained planner recur.
+        In a <em>stall</em>, the planner keeps waiting behind a vehicle that has already moved on.
+        In the other failure, the planner does not slow down for a slower vehicle ahead.
+        With a limited budget of environment steps, exploration rarely finds the maneuver that avoids them.
+      </p>
+      <p>
+        In half of the collected episodes, we therefore execute a scripted <em>speed event</em>: a push, which is a speed increase held for seconds, or a brake held for seconds.
+        The replay buffer stores these transitions like any other transition.
+        The critic learns the value of the maneuver, and the nudge policy adopts it where the critic values it.
+      </p>
+      <p>
+        The videos “Queue departs” and “Start from standstill” below show the learned push.
+      </p>
+    </div>
+    <div>
+      <table class="small-table">
+        <thead>
+          <tr><th>Change on Test14-hard R</th><th>Without events</th><th>+ Speed events (ours)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stalls released</td><td>9 %</td><td>29 %</td></tr>
+          <tr><td>Progress gate</td><td>−0.1</td><td>+0.9</td></tr>
+          <tr><td>Progress</td><td>+0.2</td><td>+0.3</td></tr>
+          <tr><td>Collision</td><td>+1.2</td><td>+1.7</td></tr>
+          <tr><td>Time-to-collision</td><td>+1.9</td><td>+2.1</td></tr>
+          <tr class="group"><td>Score</td><td>+3.25<small>±0.34</small></td><td><b>+4.55</b><small>±0.64</small></td></tr>
+        </tbody>
+      </table>
+      <p class="caption">
+        <b>The importance of speed events, our simulator.</b> Change over the pretrained planner on Test14-hard R, the setting with the lowest scores.
+        With speed events, the policy releases more stalls, the progress gate rises, and the score gains more.
+      </p>
+    </div>
+  </div>
 </section>
 
 <section id="videos">
