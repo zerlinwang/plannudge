@@ -2,6 +2,11 @@
 (function () {
   const $ = (id) => document.getElementById(id);
 
+  // The video under the TL;DR plays at 2 times the normal speed.
+  const teaser = $("teaser-video");
+  teaser.defaultPlaybackRate = 2;
+  teaser.playbackRate = 2;
+
   // ---------- How PlanNudge works: steps over the method figure ----------
   // box = [left, top, width, height] in percent of the figure
   const STEPS = [
