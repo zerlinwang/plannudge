@@ -6,8 +6,30 @@
   const teaser = $("teaser-video");
   teaser.defaultPlaybackRate = 2;
   teaser.playbackRate = 2;
-  // No browser controls: their dark bar covers the curves. A click pauses or resumes the video.
-  teaser.addEventListener("click", () => (teaser.paused ? teaser.play() : teaser.pause()));
+  // The page draws its own control bar below the video. The browser controls would cover the curves
+  // with a dark bar, and they contain a volume button although the video has no sound.
+  const toggle = $("teaser-toggle"), seek = $("teaser-seek"), time = $("teaser-time");
+  const clock = (t) => Math.floor(t / 60) + ":" + String(Math.floor(t % 60)).padStart(2, "0");
+  const playPause = () => (teaser.paused ? teaser.play() : teaser.pause());
+  const showState = () => {
+    toggle.textContent = teaser.paused ? "▶" : "❚❚";
+    toggle.setAttribute("aria-label", teaser.paused ? "Play" : "Pause");
+  };
+  const showTime = () => {
+    const d = teaser.duration || 0;
+    seek.value = d ? (teaser.currentTime / d) * 1000 : 0;
+    time.textContent = clock(teaser.currentTime) + " / " + clock(d);
+  };
+  teaser.addEventListener("click", playPause);
+  toggle.addEventListener("click", playPause);
+  teaser.addEventListener("play", showState);
+  teaser.addEventListener("pause", showState);
+  teaser.addEventListener("timeupdate", showTime);
+  teaser.addEventListener("loadedmetadata", showTime);
+  seek.addEventListener("input", () => {
+    if (teaser.duration) teaser.currentTime = (seek.value / 1000) * teaser.duration;
+  });
+  showState();
 
   // ---------- How PlanNudge works: steps over the method figure ----------
   // box = [left, top, width, height] in percent of the figure

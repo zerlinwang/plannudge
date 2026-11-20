@@ -79,6 +79,12 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
   font-size: 1.2cqw; line-height: 1.6; color: #b0281c; white-space: nowrap;
 }
 
+.vbar { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.vbar button { width: 38px; height: 30px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); font-size: 0.8rem; cursor: pointer; }
+.vbar button:hover { background: var(--panel); }
+.vbar input { flex: 1; }
+.vbar span { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 /* ---------- shared pieces ---------- */
 .card { border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin: 22px 0; background: #fff; }
 .card h3 { margin-top: 0; }
