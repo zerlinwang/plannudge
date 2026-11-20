@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlanNudge: Your Diffusion-Based Driving Planner Only Needs a Nudge</title>
+  <meta name="description" content="PlanNudge freezes a pretrained diffusion-based driving planner and trains a small policy that adjusts the speed and curvature of its plans with off-policy RL in closed loop.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <p class="method-name">PlanNudge</p>
+  <h1>Your Diffusion-Based Driving Planner Only Needs a Nudge</h1>
+  <!-- TODO: replace with the author list and affiliations -->
+  <p class="authors">Anonymous Authors</p>
+  <p class="venue">Paper under review</p>
+  <nav class="links">
+    <!-- TODO: add the URLs and remove the class "soon" -->
+    <a class="btn soon" aria-disabled="true">Paper (soon)</a>
+    <a class="btn soon" aria-disabled="true">arXiv (soon)</a>
+    <a class="btn soon" aria-disabled="true">Code (soon)</a>
+  </nav>
+</header>
+
+<main>
+
+<section id="tldr">
+  <div class="tldr">
+    <strong>TL;DR</strong>
+    We keep a pretrained diffusion-based driving planner frozen.
+    A small MLP, the <em>nudge policy</em>, adjusts the speed and the curvature of each plan.
+    Off-policy RL trains this MLP in closed-loop simulation.
+    On nuPlan, PlanNudge matches or exceeds the previous state-of-the-art RL finetuning method in all six settings, with about one sixth of the environment steps.
+  </div>
+  <figure>
+    <video src="assets/videos/fig04b_pedestrians.mp4" controls muted loop autoplay playsinline></video>
+    <figcaption>
+      Pedestrians stand at the right edge of the lane. The pretrained planner (top) hits one of them.
+      PlanNudge (bottom) uses the same frozen planner. The nudge policy lowers the planned speed and steers left.
+      The two curves show the speed offset and the curvature offset over time.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="motivation">
+  <h2>Motivation</h2>
+  <p>
+    Diffusion-based planners model the many ways in which humans drive.
+    In closed-loop driving, they can still collide with other vehicles or leave the road, because their own errors lead them to states that the training data does not contain.
+    Reinforcement learning (RL) can address this problem: the planner learns from the states that it visits in simulation.
+    However, RL on a diffusion-based planner has two difficulties.
+  </p>
+
+  <div class="card">
+    <h3>Difficulty 1: iterative denoising</h3>
+    <p>
+      A diffusion-based planner produces one plan with <em>K</em> denoising steps, so the likelihood of the plan is intractable.
+      Policy-gradient methods therefore treat every denoising step as one RL action. This multiplies the RL horizon by <em>K</em>.
+      Value-based methods backpropagate the critic's gradient through all <em>K</em> steps, which is costly and can destabilize training.
+    </p>
+    <label class="inline-slider">Denoising steps <em>K</em> = <output id="denoise-k-value">5</output>
+      <input id="denoise-k" type="range" min="1" max="10" value="5">
+    </label>
+    <div class="dn">
+      <div class="dn-row">
+        <div class="dn-label">Finetuning the planner<small id="denoise-finetune-count"></small></div>
+        <div class="dn-boxes" id="denoise-finetune"></div>
+      </div>
+      <div class="dn-row">
+        <div class="dn-label">PlanNudge<small>1 RL decision per plan</small></div>
+        <div class="dn-boxes" id="denoise-ours"></div>
+      </div>
+    </div>
+    <p class="dn-total">
+      RL decisions in one episode of 150 planning steps:
+      finetuning the planner <b id="denoise-finetune-total"></b>,
+      PlanNudge <b class="accent" id="denoise-ours-total"></b>.
+    </p>
+    <p class="legend">
+      <span class="key action"></span> an RL action
+      <span class="key frozen"></span> frozen, a part of the environment
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Difficulty 2: receding-horizon execution</h3>
+    <p>
+      The planner outputs a plan of 8 seconds, which is 80 waypoints.
+      The vehicle follows the plan for only 0.1 seconds. Then the planner makes a new plan.
+      If the RL action is the whole plan, the environment gives feedback on a very small part of the action. This makes value learning hard.
+    </p>
+    <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan is driven."></svg>
+    <div class="cells" id="horizon-cells" aria-hidden="true"></div>
+    <p class="legend">
+      <span class="key executed"></span> the vehicle drives this part: 1 of 80 waypoints
+      <span class="key replaced"></span> the next plan replaces this part
+      <span class="spacer"></span>
+      plans made so far: <b id="horizon-count">1</b>
+    </p>
+  </div>
+
+  <h3>How do existing methods handle the two difficulties?</h3>
+  <figure>
+    <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
+    <figcaption>
+      (a) Open-loop finetuning from logs scores candidate plans in logged states and does not execute them.
+      (b) Methods such as PlannerRFT sample plans in states from closed-loop rollouts, but still update the planner with open-loop scores.
+      (c) PlanNudge freezes the planner. A one-step MLP nudges the plan, and the closed-loop score of the nudged plan trains the MLP.
+    </figcaption>
+  </figure>
+  <p>
+    All existing methods finetune the diffusion-based planner itself. Both difficulties come from this choice.
+  </p>
+  <p class="question">Can we post-train a diffusion-based planner without finetuning it?</p>
+
+  <div class="two-col">
+    <div>
+      <h3>A first test: random nudges</h3>
+      <p>
+        We keep the planner fixed and add small random adjustments to the speed and the curvature of its plans.
+        We test this on the 72 Val14 scenarios in which the pretrained Diffusion Planner fails.
+      </p>
+      <ul>
+        <li>With random nudges, <b>53 %</b> of these scenarios reach a score of at least 50 in at least one of 20 rollouts.</li>
+        <li>Sampling the planner again with new diffusion noise, without a nudge, does this in only <b>2 of 72</b> scenarios, even with 50 rollouts.</li>
+      </ul>
+      <p>
+        So a small adjustment of speed and curvature is often enough.
+        A learned policy only has to find the right adjustment.
+      </p>
+    </div>
+    <figure>
+      <img src="assets/figs/analysis_saves.svg" alt="Fraction of failed scenarios that succeed at least once, against the number of rollouts.">
+      <figcaption>Fraction of the 72 failed scenarios in which at least one rollout reaches a score of at least 50. Solid lines: random nudges at three noise scales. Dashed line: the planner sampled again without a nudge.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="try">
+  <h2>Try it: nudge a plan yourself</h2>
+  <p>
+    The gray dashed line is the base plan of the frozen planner. With this plan, the vehicle hits a pedestrian.
+    Move the two sliders to change the plan. These two numbers are the complete action space of PlanNudge.
+  </p>
+
+  <div class="card widget">
+    <svg id="nudge-scene" class="scene" role="img" aria-label="Top-down view of a road with the ego vehicle, two pedestrians, the base plan and the nudged plan."></svg>
+    <p class="legend">
+      <span class="key line-base"></span> base plan (first 4 s)
+      <span class="key line-nudged"></span> nudged plan
+      <span class="key box-ghost"></span> vehicle at the closest point
+      <span class="key ped"></span> pedestrian
+    </p>
+
+    <div class="controls">
+      <div class="control">
+        <label for="nudge-speed">Speed offset <output id="nudge-speed-value"></output></label>
+        <input id="nudge-speed" type="range" min="-1" max="1" step="0.01" value="0">
+        <div class="range-ends"><span>−1 m/s (slower)</span><span>+1 m/s (faster)</span></div>
+        <svg id="nudge-speed-chart" class="chart" role="img" aria-label="Planned speed over time for the base plan and the nudged plan."></svg>
+        <p class="chart-title">planned speed (m/s)</p>
+      </div>
+      <div class="control">
+        <label for="nudge-curv">Curvature offset <output id="nudge-curv-value"></output></label>
+        <input id="nudge-curv" type="range" step="0.001" value="0">
+        <div class="range-ends"><span>steer right</span><span>steer left</span></div>
+        <svg id="nudge-turn-chart" class="chart" role="img" aria-label="Change of heading over time."></svg>
+        <p class="chart-title">change of heading against the base plan</p>
+      </div>
+    </div>
+
+    <div class="readout">
+      <span id="nudge-status" class="status"></span>
+      <span>smallest distance to a pedestrian: <b id="nudge-clearance"></b></span>
+      <span>shift of the plan at 4 s: <b id="nudge-shift"></b></span>
+    </div>
+    <div class="buttons">
+      <button type="button" id="nudge-paper" class="btn primary">Apply the nudge from the paper</button>
+      <button type="button" id="nudge-play" class="btn">Drive this plan for 4 s</button>
+      <button type="button" id="nudge-reset" class="btn">Reset</button>
+    </div>
+  </div>
+
+  <p class="note">
+    <b>What this demo shows.</b> The transform is the one in the paper: the speed offset grows over 1.1 s and then stays constant, and the curvature offset bends the first 1.5 s of the plan.
+    The button applies the largest offsets that the trained policy used in the pedestrian video above (−0.36 m/s and +0.012 m⁻¹).
+    <b>What it does not show.</b> The scene is illustrative, and the demo applies one nudge to one plan.
+    In closed loop, the vehicle follows a plan for 0.1 s, the planner makes a new plan, and the nudge policy outputs a new nudge.
+    For this reason the far part of a nudged plan, which here leaves the lane, is never driven.
+  </p>
+</section>
+
+<section id="method">
+  <h2>How PlanNudge works</h2>
+  <p>
+    The frozen planner, the plan transform, and the simulator form the environment.
+    The nudge policy and its critic form the agent. Select a step.
+  </p>
+  <div class="tabs" id="method-tabs" role="tablist"></div>
+  <p class="step-text" id="method-text"></p>
+  <figure>
+    <div class="figure-overlay">
+      <img src="assets/figs/method_v4.svg" alt="Overview of PlanNudge: the frozen diffusion-based planner, the plan transform and the closed-loop simulator form the environment; the nudge policy and the Q-function form the agent.">
+      <div id="method-highlight"></div>
+    </div>
+  </figure>
+
+  <h3>Why this design removes both difficulties</h3>
+  <ul>
+    <li><b>Iterative denoising.</b> The nudge policy makes one decision per plan in one forward pass, for any number of denoising steps. Standard off-policy RL applies directly.</li>
+    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the part of the plan that the vehicle drives. The critic assigns credit to two numbers, not to 80 waypoints.</li>
+    <li><b>The pretrained planner is preserved.</b> The planner keeps its multimodal distribution over maneuvers. A zero nudge returns the plan of the pretrained planner exactly, and the nudge policy outputs a zero nudge before training.</li>
+  </ul>
+</section>
+
+<section id="results">
+  <h2>Results on nuPlan</h2>
+  <div class="stats">
+    <div><b>6 of 6</b><span>settings in which PlanNudge matches or exceeds PlannerRFT</span></div>
+    <div><b>6.2 M</b><span>environment steps, against 40 M for PlannerRFT</span></div>
+    <div><b>&lt; 1/5</b><span>of the model compute of PlannerRFT (128 against at least 710 × 10<sup>15</sup> FLOPs)</span></div>
+  </div>
+
+  <figure>
+    <div class="crop-curve" role="img" aria-label="Improvement on Val14 R against environment steps. PlanNudge reaches the gain that PlannerRFT reports at 40 M steps after about 1.3 M steps."></div>
+    <figcaption>
+      <b>Sample efficiency.</b> Improvement of the Val14 R score against environment steps, in our simulator. Mean and standard deviation over six runs.
+      PlanNudge reaches the gain that PlannerRFT reports after 40 M steps (+1.52) after about 1.3 M steps. This is 30 times fewer steps.
+    </figcaption>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th rowspan="2">Type</th><th rowspan="2">Method</th><th colspan="2">Val14</th><th colspan="2">Test14-hard</th><th colspan="2">Test14-random</th><th rowspan="2">RL steps</th></tr>
+        <tr><th>NR</th><th>R</th><th>NR</th><th>R</th><th>NR</th><th>R</th></tr>
+      </thead>
+      <tbody>
+        <tr class="muted"><td>Expert</td><td>Log replay</td><td>93.53</td><td>80.32</td><td>85.96</td><td>68.80</td><td>94.03</td><td>75.86</td><td>–</td></tr>
+        <tr class="group"><td rowspan="5">Imitation learning</td><td>PLUTO</td><td>88.89</td><td>78.11</td><td>70.03</td><td>59.74</td><td>89.90</td><td>78.62</td><td>–</td></tr>
+        <tr><td>Diffusion Planner</td><td>89.87</td><td>82.80</td><td>75.99</td><td>69.22</td><td>89.19</td><td>82.93</td><td>–</td></tr>
+        <tr><td>Flow Planner</td><td>90.43</td><td>83.31</td><td>76.47</td><td>70.42</td><td>89.88</td><td>82.93</td><td>–</td></tr>
+        <tr><td>DFP</td><td>90.33</td><td>79.97</td><td>76.91</td><td>63.56</td><td>90.69</td><td>81.96</td><td>–</td></tr>
+        <tr><td>Diffusion Planner (DDIM)</td><td>90.00</td><td>83.22</td><td>75.74</td><td>68.93</td><td>89.99</td><td>82.70</td><td>–</td></tr>
+        <tr class="group"><td rowspan="3">RL post-training</td><td>Open-loop finetuning from logs</td>
+          <td>90.09<small>±0.16</small><i>+0.09</i></td><td>84.35<small>±0.20</small><i class="up">+1.13</i></td>
+          <td>76.39<small>±0.89</small><i>+0.65</i></td><td>70.42<small>±0.20</small><i class="up">+1.49</i></td>
+          <td>89.95<small>±0.43</small><i class="down">−0.04</i></td><td>85.02<small>±0.23</small><i class="up">+2.32</i></td><td>–</td></tr>
+        <tr><td>PlannerRFT</td><td>89.96</td><td>84.46</td><td><b>77.16</b></td><td>72.21</td><td>90.76</td><td>85.80</td><td>40 M</td></tr>
+        <tr class="ours"><td>PlanNudge (ours)</td>
+          <td><b>91.07</b><small>±0.25</small><i class="up">+1.07</i></td><td><b>85.00</b><small>±0.23</small><i class="up">+1.78</i></td>
+          <td><b>77.16</b><small>±0.32</small><i class="up">+1.42</i></td><td><b>73.44</b><small>±0.63</small><i class="up">+4.51</i></td>
+          <td><b>91.03</b><small>±0.65</small><i class="up">+1.04</i></td><td><b>86.09</b><small>±0.47</small><i class="up">+3.39</i></td><td>6.2 M</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">
+    <b>Closed-loop scores on nuPlan, official devkit.</b> NR: non-reactive traffic. R: reactive traffic.
+    All RL methods start from the Diffusion Planner (DDIM). Our rows show the mean and the standard deviation over six runs, and below them the change against the pretrained planner.
+    Bold: the highest RL post-training result in each setting. Blue: an improvement of more than 1 point. Red: worse than the pretrained planner.
+  </p>
+
+  <div class="two-col">
+    <figure>
+      <img src="assets/figs/curves_val14.svg" alt="Learning curves on Val14 for PlanNudge and three variants.">
+    </figure>
+    <div>
+      <h3>What matters for off-policy RL</h3>
+      <p>The curves show the change of the Val14 score during training, for PlanNudge and for three variants, in our simulator.</p>
+      <ul>
+        <li><b>Shape the reward.</b> A small safety penalty at every step gives a higher score than the terminal score alone.</li>
+        <li><b>Use multi-step returns.</b> With 1-step returns, most of the gain disappears.</li>
+        <li><b>Use temporally correlated exploration noise.</b> Independent Gaussian noise gives a lower gain.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="videos">
+  <h2>Visualizations</h2>
+  <p>
+    Each video shows the same scenario twice: the pretrained planner (top) and PlanNudge (bottom).
+    Gray: the pretrained planner. Orange: PlanNudge. Dashed lines: plans, drawn for their first 4 s. Solid lines: driven paths.
+  </p>
+  <div class="tabs" id="video-tabs" role="tablist"></div>
+  <figure>
+    <video id="video-player" controls muted loop playsinline preload="metadata"></video>
+    <figcaption id="video-caption"></figcaption>
+  </figure>
+</section>
+
+<section id="citation">
+  <h2>Citation</h2>
+  <!-- TODO: add the authors and the venue -->
+  <pre><code>@article{plannudge,
+  title  = {Your Diffusion-Based Driving Planner Only Needs a Nudge},
+  author = {Anonymous Authors},
+  note   = {Under review},
+  year   = {2026}
+}</code></pre>
+</section>
+
+</main>
+
+<footer>PlanNudge project page.</footer>
+
+<script src="js/transform.js"></script>
+<script src="js/motivation.js"></script>
+<script src="js/widget.js"></script>
+<script src="js/page.js"></script>
+</body>
+</html>
