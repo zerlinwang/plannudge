@@ -20,7 +20,7 @@
   ours.appendChild(box("action nudge", "nudge"));
   $("denoise-finetune-count").textContent = K + " denoising steps = " + K + " RL decisions per plan";
   $("denoise-finetune-total").textContent = EPISODE_STEPS + " × " + K + " = " + EPISODE_STEPS * K;
-  $("denoise-ours-total").textContent = EPISODE_STEPS + " × 1 = " + EPISODE_STEPS;
+  $("denoise-ours-total").textContent = String(EPISODE_STEPS);
 
   // ---------- Difficulty 2: receding-horizon execution ----------
   const cells = $("horizon-cells");
