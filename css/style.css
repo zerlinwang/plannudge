@@ -139,7 +139,7 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .h-old { fill: none; stroke: #c9cdd3; stroke-width: 0.3; stroke-dasharray: 1.2 0.9; }
 .h-driven { fill: none; stroke: #4b5563; stroke-width: 0.7; stroke-linecap: round; }
 .h-count { font-size: 1.7px; fill: var(--muted); font-variant-numeric: tabular-nums; }
-.h-executed { fill: none; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round; }
+.h-executed { fill: none; stroke: var(--ink); stroke-width: 0.9; stroke-linecap: round; }
 .cells { display: grid; grid-template-columns: repeat(80, 1fr); grid-template-rows: repeat(3, 8px); grid-auto-flow: column; gap: 1px; margin: 4px; }
 .cells:not(.two), .cells .pair { outline: 1.5px solid var(--ink); outline-offset: 3px; border-radius: 1px; }
 .cells .pair { grid-column: 1; grid-row: 1 / span 2; display: grid; grid-template-rows: repeat(2, 8px); gap: 1px; }

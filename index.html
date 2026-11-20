@@ -111,10 +111,11 @@
     <h3>Difficulty 2: receding-horizon execution</h3>
     <p>
       The planner outputs a plan of 8 seconds, which is 80 waypoints.
-      The vehicle follows the plan for only 0.1 seconds. Then the planner makes a new plan.
-      If the action is the whole plan, the action space has 240 dimensions, and the environment gives feedback on a very small part of them. This makes value learning hard.
+      The tracker reads only about the first second of each plan: a target speed at 1 second ahead, and the curvature of the first second.
+      It controls the vehicle for 0.1 seconds. Then the planner makes a new plan.
+      If the action is the whole plan, the action space has 240 dimensions, and most of them never reach the tracker. This makes value learning hard.
     </p>
-    <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan is driven."></svg>
+    <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. The tracker reads only the first second of each plan."></svg>
     <div class="dn">
       <div class="dn-row">
         <div class="dn-label">Finetuning the planner<small class="space">Action space: 240-D</small><small>80 × (x, y, heading)</small></div>
@@ -126,13 +127,13 @@
       </div>
     </div>
     <p class="dn-total">
-      Finetuning the planner: the action space has <b>240 dimensions</b>, and only 3 of them change the driven motion before the next plan.
-      PlanNudge: the action space has <b class="accent">2 dimensions</b>, and both change the driven motion.
+      Finetuning the planner: the action space has <b>240 dimensions</b>, and the tracker reads about 30 of them before the next plan replaces the rest.
+      PlanNudge: the action space has <b class="accent">2 dimensions</b>, and they act on exactly the two quantities that the tracker reads: the speed and the curvature of the first second.
     </p>
     <p class="legend">
       <span class="key outline"></span> the action space
-      <span class="key executed"></span> changes the driven motion
-      <span class="key replaced"></span> also in the action space, but never driven
+      <span class="key executed"></span> read by the tracker
+      <span class="key replaced"></span> also in the action space, but replaced before the tracker reads it
     </p>
   </div>
 
@@ -257,7 +258,7 @@
   <h3>Why this design removes both difficulties</h3>
   <ul>
     <li><b>Iterative denoising.</b> The nudge policy makes one decision per plan in one forward pass, for any number of denoising steps. Standard off-policy RL applies directly.</li>
-    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the part of the plan that the vehicle drives. The critic assigns credit to 2 dimensions, not to 240.</li>
+    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the part of the plan that the tracker reads. The critic assigns credit to 2 dimensions, not to 240.</li>
     <li><b>The pretrained planner is preserved.</b> The planner keeps its multimodal distribution over maneuvers. A zero nudge returns the plan of the pretrained planner exactly, and the nudge policy outputs a zero nudge before training.</li>
   </ul>
 </section>

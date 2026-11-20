@@ -26,7 +26,7 @@
   const cells = $("horizon-cells");
   for (let i = 0; i < 240; i++) { // 80 waypoints x (x, y, heading), filled column by column
     const c = document.createElement("span");
-    if (i < 3) c.className = "executed";
+    if (i < 30) c.className = "executed"; // the tracker reads about the first 1.0 s: 10 waypoints
     cells.appendChild(c);
   }
 
@@ -84,7 +84,7 @@
     const x = START + SPEED * t;
     const p = plan(x, t);
     planLine.setAttribute("points", str(p));
-    executed.setAttribute("points", str(p.slice(0, 2)));
+    executed.setAttribute("points", str(p.slice(0, 11))); // the first 1.0 s of the plan, which the tracker reads
     const trail = [];
     for (let px = START; px <= x; px += 0.5) trail.push([px, road(px)]);
     trail.push([x, road(x)]);
