@@ -31,6 +31,9 @@ h3 { font-size: 1.15rem; margin: 28px 0 8px; }
 p { margin: 0 0 14px; }
 ul { margin: 0 0 14px; padding-left: 22px; }
 li { margin-bottom: 6px; }
+/* no single word on the last line of a text block */
+p, li, figcaption, summary, .tldr, .question { text-wrap: pretty; }
+.stats span, .facts span, .takeaways div, .dn-label small { text-wrap: balance; }
 img, video, svg { max-width: 100%; display: block; }
 figure { margin: 22px 0; }
 figure img, figure video { width: 100%; border-radius: 6px; }

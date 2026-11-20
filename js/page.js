@@ -2,6 +2,19 @@
 (function () {
   const $ = (id) => document.getElementById(id);
 
+  // Join the last two words of a text block with a non-breaking space, so that the last line never holds one word.
+  function noOrphan(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let last = null;
+    while (walker.nextNode()) if (walker.currentNode.nodeValue.trim()) last = walker.currentNode;
+    if (!last) return;
+    const text = last.nodeValue.replace(/\s+$/, "");
+    const i = text.lastIndexOf(" ");
+    if (i > 0) last.nodeValue = text.slice(0, i) + "\u00A0" + text.slice(i + 1);
+  }
+  const TEXT_BLOCKS = "p, li, figcaption, summary, .tldr, .stats span, .facts span, .takeaways div, .dn-label small";
+  document.querySelectorAll(TEXT_BLOCKS).forEach(noOrphan);
+
   // The page draws its own control bar below a video. The browser controls would cover the curves
   // with a dark bar, and they contain a volume button although the videos have no sound.
   function controlBar(video, bar) {
@@ -68,6 +81,7 @@
   function showStep(i) {
     const s = STEPS[i];
     $("method-text").textContent = s.text;
+    noOrphan($("method-text"));
     [...tabs.children].forEach((b, j) => b.setAttribute("aria-selected", j === i));
     const [l, t, w, h] = s.box;
     Object.assign(highlight.style, { left: l + "%", top: t + "%", width: w + "%", height: h + "%" });
@@ -98,6 +112,7 @@
     const [file, , caption] = VIDEOS[i];
     player.src = "assets/videos/" + file + ".mp4";
     $("video-caption").textContent = caption;
+    noOrphan($("video-caption"));
     [...vTabs.children].forEach((b, j) => b.setAttribute("aria-selected", j === i));
   }
   VIDEOS.forEach((v, i) => {
