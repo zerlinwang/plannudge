@@ -107,27 +107,27 @@
     <p>
       The planner outputs a plan of 8 seconds, which is 80 waypoints.
       The vehicle follows the plan for only 0.1 seconds. Then the planner makes a new plan.
-      If the RL action is the whole plan, it has 240 dimensions, and the environment gives feedback on a very small part of them. This makes value learning hard.
+      If the action is the whole plan, the action space has 240 dimensions, and the environment gives feedback on a very small part of them. This makes value learning hard.
     </p>
     <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan is driven."></svg>
     <div class="dn">
       <div class="dn-row">
-        <div class="dn-label">Finetuning the planner<small>RL action: 240 dimensions</small><small>80 × (x, y, heading)</small></div>
+        <div class="dn-label">Finetuning the planner<small class="space">Action space: 240-D</small><small>80 × (x, y, heading)</small></div>
         <div class="cells" id="horizon-cells" aria-hidden="true"></div>
       </div>
       <div class="dn-row">
-        <div class="dn-label">PlanNudge<small>RL action: 2 dimensions</small></div>
+        <div class="dn-label">PlanNudge<small class="space">Action space: 2-D</small></div>
         <div class="cells two" aria-hidden="true"><div class="pair"><span class="executed"></span><span class="executed"></span></div><em>speed offset, curvature offset</em></div>
       </div>
     </div>
     <p class="dn-total">
-      Finetuning the planner: the policy outputs <b>240 dimensions</b>, and only 3 of them change the driven motion before the next plan.
-      PlanNudge: the policy outputs <b class="accent">2 dimensions</b>, and both change the driven motion.
+      Finetuning the planner: the action space has <b>240 dimensions</b>, and only 3 of them change the driven motion before the next plan.
+      PlanNudge: the action space has <b class="accent">2 dimensions</b>, and both change the driven motion.
     </p>
     <p class="legend">
-      <span class="key outline"></span> one RL action
+      <span class="key outline"></span> the action space
       <span class="key executed"></span> changes the driven motion
-      <span class="key replaced"></span> also in the RL action, but replaced by the next plan before the vehicle drives it
+      <span class="key replaced"></span> also in the action space, but never driven
     </p>
   </div>
 

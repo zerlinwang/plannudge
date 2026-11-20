@@ -114,6 +114,7 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .dn-row { display: grid; grid-template-columns: 190px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 .dn-label { font-weight: 600; color: var(--ink); }
 .dn-label small { display: block; font-weight: 400; color: var(--muted); }
+.dn-label small.space { display: inline-block; margin: 3px 0; padding: 1px 7px; border-radius: 3px; background: #ffe9a8; color: var(--ink); font-weight: 700; font-size: 0.85rem; }
 .dn-boxes { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 /* diagram cells, not buttons: square corners, light fill, thin border */
 .dn-box { min-width: 30px; padding: 3px 6px; border-radius: 2px; font-size: 0.8rem; text-align: center; white-space: nowrap; cursor: default; }
