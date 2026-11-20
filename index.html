@@ -316,17 +316,14 @@
       <h3>Speed events: demonstrations of the maneuvers that avoid failures</h3>
       <p>
         Two failures of the pretrained planner recur.
-        In a <em>stall</em>, the planner keeps waiting behind a vehicle that has already moved on.
-        In the other failure, the planner does not slow down for a slower vehicle ahead.
+        In the first, the planner keeps waiting behind a vehicle that has already moved on. This stall is known as the <em>inertia problem</em> of behavior cloning.
+        In the second, the planner does not slow down for a slower vehicle ahead.
         With a limited budget of environment steps, exploration rarely finds the maneuver that avoids them.
       </p>
       <p>
         In half of the collected episodes, we therefore execute a scripted <em>speed event</em>: a push, which is a speed increase held for seconds, or a brake held for seconds.
         The replay buffer stores these transitions like any other transition.
         The critic learns the value of the maneuver, and the nudge policy adopts it where the critic values it.
-      </p>
-      <p>
-        The videos “Queue departs” and “Start from standstill” below show the learned push.
       </p>
     </div>
     <div>
