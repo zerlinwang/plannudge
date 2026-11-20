@@ -188,9 +188,10 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 
 /* ---------- results ---------- */
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
-.stats div { background: var(--panel); border-radius: 10px; padding: 16px 18px; }
-.stats b { display: block; font-size: 1.9rem; color: var(--orange); line-height: 1.2; }
-.stats span { font-size: 0.9rem; color: var(--muted); }
+.stats div { background: var(--panel); border-radius: 10px; padding: 20px 18px 18px; text-align: center; }
+.stats em { display: block; font-style: normal; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+.stats b { display: block; font-size: clamp(2.6rem, 6vw, 3.6rem); color: var(--orange); line-height: 1.15; margin: 4px 0 6px; white-space: nowrap; }
+.stats span { display: block; font-size: 0.9rem; line-height: 1.45; color: var(--muted); }
 /* the right 39 % of the results figure of the paper holds the sample-efficiency curve */
 .crop-curve {
   width: 100%; max-width: 620px; margin: 0 auto; aspect-ratio: 193.7 / 84.76;
