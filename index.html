@@ -111,11 +111,12 @@
     <h3>Difficulty 2: receding-horizon execution</h3>
     <p>
       The planner outputs a plan of 8 seconds, which is 80 waypoints.
-      The tracker reads only about the first second of each plan: a target speed at 1 second ahead, and the curvature of the first second.
-      It controls the vehicle for 0.1 seconds. Then the planner makes a new plan.
-      If the action is the whole plan, the action space has 240 dimensions, and most of them never reach the tracker. This makes value learning hard.
+      The tracker converts the plan into one control command, an acceleration and a steering rate, and applies it for 0.1 seconds. Then the planner makes a new plan.
+      We measured on the nuPlan tracker how strongly each dimension of a plan changes this command:
+      the first 1.5 seconds of the plan carry more than 98 % of the influence, and the dimensions after 2 seconds carry almost none.
+      If the action is the whole plan, most of its 240 dimensions have almost no effect on the vehicle. This makes value learning hard.
     </p>
-    <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. The tracker reads only the first second of each plan."></svg>
+    <svg id="horizon-scene" class="scene" role="img" aria-label="A vehicle follows a road and makes a new 8-second plan every 0.1 seconds. Only the beginning of each plan changes the control command."></svg>
     <div class="dn">
       <div class="dn-row">
         <div class="dn-label">Finetuning the planner<small class="space">Action space: 240-D</small><small>80 × (x, y, heading)</small></div>
@@ -127,13 +128,13 @@
       </div>
     </div>
     <p class="dn-total">
-      Finetuning the planner: the action space has <b>240 dimensions</b>, and the tracker reads about 30 of them before the next plan replaces the rest.
-      PlanNudge: the action space has <b class="accent">2 dimensions</b>, and they act on exactly the two quantities that the tracker reads: the speed and the curvature of the first second.
+      Finetuning the planner: the action space has <b>240 dimensions</b>, and only the dimensions of about the first 15 waypoints change the control command.
+      PlanNudge: the action space has <b class="accent">2 dimensions</b>. The plan transform applies them to the beginning of the plan before the tracker receives it.
+      The speed offset changes the acceleration command, and the curvature offset changes the steering rate command.
     </p>
     <p class="legend">
       <span class="key outline"></span> the action space
-      <span class="key executed"></span> read by the tracker
-      <span class="key replaced"></span> also in the action space, but replaced before the tracker reads it
+      <span class="key scale"></span> influence of a dimension on the control command, measured: from none (grey) to strong (dark)
     </p>
   </div>
 
@@ -255,7 +256,7 @@
   <h3>Why this design removes both difficulties</h3>
   <ul>
     <li><b>Iterative denoising.</b> The nudge policy makes one decision per plan in one forward pass, for any number of denoising steps. Standard off-policy RL applies directly.</li>
-    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the part of the plan that the tracker reads. The critic assigns credit to 2 dimensions, not to 240.</li>
+    <li><b>Receding-horizon execution.</b> The action has two dimensions, and both change the control command of the tracker. The critic assigns credit to 2 dimensions, not to 240.</li>
     <li><b>The pretrained planner is preserved.</b> The planner keeps its multimodal distribution over maneuvers. A zero nudge returns the plan of the pretrained planner exactly, and the nudge policy outputs a zero nudge before training.</li>
   </ul>
 </section>

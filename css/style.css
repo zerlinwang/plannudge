@@ -100,6 +100,7 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .key.frozen { background: #eef2f7; border: 1px solid #c5d0de; border-radius: 2px; }
 .key.replaced { background: #c3c8d0; }
 .key.outline { background: none; border: 1.5px solid var(--ink); border-radius: 1px; }
+.key.scale { width: 46px; background: linear-gradient(to right, #c3c8d0, var(--ink)); border-radius: 2px; }
 .key.line-base { height: 0; border-top: 3px dashed var(--gray); border-radius: 0; width: 22px; }
 .key.line-nudged { height: 0; border-top: 3px solid var(--orange); border-radius: 0; width: 22px; }
 .key.box-ghost { background: none; border: 2px solid var(--orange); }

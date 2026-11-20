@@ -24,9 +24,15 @@
 
   // ---------- Difficulty 2: receding-horizon execution ----------
   const cells = $("horizon-cells");
+  // Measured influence of each plan dimension on the command of the nuPlan LQR tracker (acceleration, steering rate),
+  // relative to the largest influence. Order: waypoint 1 (x, y, heading), waypoint 2, ... The dimensions after this
+  // list have an influence below 0.005. Measured with tools/tracker_sensitivity.py on the base plan of the widget.
+  const INFLUENCE = [0, 0, 0.14, 0, 0, 0.21, 0.01, 0, 0.26, 0.03, 0, 0.29, 0.04, 0, 0.32, 0.01, 0, 0.36, 0.15, 0, 0.41, 0.51, 0.02, 0.51, 0.98, 0.03, 0.69, 1, 0.03, 1, 1, 0.03, 0.55, 0.98, 0.03, 0.31, 0.51, 0.02, 0.17, 0.15, 0, 0.09, 0, 0, 0.05, 0.04, 0, 0.03, 0.03, 0, 0.02, 0.01, 0, 0.01];
+  const mix = (a, b, t) => Math.round(a + (b - a) * t);
   for (let i = 0; i < 240; i++) { // 80 waypoints x (x, y, heading), filled column by column
     const c = document.createElement("span");
-    if (i < 30) c.className = "executed"; // the tracker reads about the first 1.0 s: 10 waypoints
+    const t = INFLUENCE[i] || 0;   // 0: grey (#c3c8d0), 1: dark (#1c2740)
+    c.style.background = `rgb(${mix(195, 28, t)}, ${mix(200, 39, t)}, ${mix(208, 64, t)})`;
     cells.appendChild(c);
   }
 
@@ -59,9 +65,9 @@
   const defs = el("defs", {}, svg);
   const tint = el("filter", { id: "car-tint", "color-interpolation-filters": "sRGB" }, defs);
   el("feColorMatrix", { type: "matrix", values: "0.027 0 0 0 0.973  0 0.231 0 0 0.769  0 0 0.976 0 0.024  0 0 0 1 0" }, tint);
-  const CAR = 8.5; // side of the square picture in metres; the vehicle points up and is drawn 1.5 times its real size, so that it is visible
+  const CAR = 7.1; // side of the square picture in metres; the vehicle points up and is drawn 1.25 times its real size, so that it is visible
   el("image", { href: "assets/car.png", width: CAR, height: CAR, filter: "url(#car-tint)",
-    transform: `matrix(0 1 -1 0 ${2.2 + CAR / 2} ${-CAR / 2})` }, car);
+    transform: `matrix(0 1 -1 0 ${1.86 + CAR / 2} ${-CAR / 2})` }, car);
   // the counter is drawn outside the flipped group, at the top right corner
   const counter = el("text", { x: X1 - 1.5, y: -Y1 + 2.6, class: "h-count", "text-anchor": "end" }, svg);
 
@@ -84,7 +90,7 @@
     const x = START + SPEED * t;
     const p = plan(x, t);
     planLine.setAttribute("points", str(p));
-    executed.setAttribute("points", str(p.slice(0, 11))); // the first 1.0 s of the plan, which the tracker reads
+    executed.setAttribute("points", str(p.slice(0, 16))); // the first 1.5 s of the plan: 98 % of the influence on the command
     const trail = [];
     for (let px = START; px <= x; px += 0.5) trail.push([px, road(px)]);
     trail.push([x, road(x)]);
