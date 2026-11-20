@@ -125,16 +125,29 @@
   </div>
 
   <h3>How do existing methods handle the two difficulties?</h3>
+  <ul class="handles">
+    <li>
+      <b>Iterative denoising: accepted, at the cost of a longer horizon.</b>
+      Existing methods model the denoising process as a Markov decision process, in which each denoising step is one decision.
+      This enables policy-gradient training, but the RL horizon becomes <em>K</em> times longer.
+    </li>
+    <li>
+      <b>Receding-horizon execution: avoided, with open-loop scores.</b>
+      Existing methods do not train the planner on closed-loop scores. They score whole plans in open loop, without executing them.
+      ReCogDrive and DiffusionDriveV2 score plans sampled in logged states (a).
+      PlannerRFT samples plans in states from closed-loop rollouts (b), but its planner still learns from open-loop plan scores.
+      An open-loop score is not the closed-loop score of the driven trajectory, because the tracker follows only the beginning of each plan.
+    </li>
+  </ul>
   <figure>
     <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
     <figcaption>
-      (a) Open-loop finetuning from logs scores candidate plans in logged states and does not execute them.
-      (b) Methods such as PlannerRFT sample plans in states from closed-loop rollouts, but still update the planner with open-loop scores.
-      (c) PlanNudge freezes the planner. A one-step MLP nudges the plan, and the closed-loop score of the nudged plan trains the MLP.
+      (a) Open-loop finetuning from logs. (b) Open-loop finetuning from closed-loop rollouts, as in PlannerRFT.
+      (c) PlanNudge freezes the planner, nudges its plan with a one-step MLP, and trains the MLP on the closed-loop score.
     </figcaption>
   </figure>
   <p>
-    All existing methods finetune the diffusion-based planner itself. Both difficulties come from this choice.
+    All these methods finetune the diffusion-based planner itself, which is where both difficulties arise.
   </p>
   <p class="question">Can we post-train a diffusion-based planner without finetuning it?</p>
 

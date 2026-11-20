@@ -106,6 +106,9 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 
 input[type="range"] { width: 100%; accent-color: var(--orange); }
 
+.handles li { margin-bottom: 12px; }
+.handles li > b { display: block; color: var(--ink); }
+
 /* ---------- difficulty 1 ---------- */
 .dn { margin: 14px 0 10px; }
 .dn-row { display: grid; grid-template-columns: 190px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
