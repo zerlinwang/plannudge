@@ -55,7 +55,13 @@
   const driven = el("polyline", { class: "h-driven" }, world);
   const executed = el("polyline", { class: "h-executed" }, world);
   const car = el("g", {}, world);
-  el("rect", { x: -1.1, y: -1.15, width: 5.18, height: 2.3, rx: 0.4, class: "w-ego" }, car);
+  // The vehicle of Figure 1 of the paper: the same picture, colored as in the figure (body F8C406, windows white).
+  const defs = el("defs", {}, svg);
+  const tint = el("filter", { id: "car-tint", "color-interpolation-filters": "sRGB" }, defs);
+  el("feColorMatrix", { type: "matrix", values: "0.027 0 0 0 0.973  0 0.231 0 0 0.769  0 0 0.976 0 0.024  0 0 0 1 0" }, tint);
+  const CAR = 8.5; // side of the square picture in metres; the vehicle points up and is drawn 1.5 times its real size, so that it is visible
+  el("image", { href: "assets/car.png", width: CAR, height: CAR, filter: "url(#car-tint)",
+    transform: `matrix(0 1 -1 0 ${2.2 + CAR / 2} ${-CAR / 2})` }, car);
   // the counter is drawn outside the flipped group, at the top right corner
   const counter = el("text", { x: X1 - 1.5, y: -Y1 + 2.6, class: "h-count", "text-anchor": "end" }, svg);
 

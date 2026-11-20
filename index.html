@@ -116,8 +116,8 @@
         <div class="cells" id="horizon-cells" aria-hidden="true"></div>
       </div>
       <div class="dn-row">
-        <div class="dn-label">PlanNudge<small class="space">Action space: 2-D</small></div>
-        <div class="cells two" aria-hidden="true"><div class="pair"><span class="executed"></span><span class="executed"></span></div><em>speed offset, curvature offset</em></div>
+        <div class="dn-label">PlanNudge<small class="space">Action space: 2-D</small><small>speed offset, curvature offset</small></div>
+        <div class="cells two" aria-hidden="true"><div class="pair"><span class="executed"></span><span class="executed"></span></div></div>
       </div>
     </div>
     <p class="dn-total">
@@ -140,10 +140,9 @@
     </li>
     <li>
       <b>Receding-horizon execution: avoided, with open-loop scores.</b>
-      Existing methods do not train the planner on closed-loop scores. They score whole plans in open loop, without executing them.
-      ReCogDrive and DiffusionDriveV2 score plans sampled in logged states (a).
-      PlannerRFT samples plans in states from closed-loop rollouts (b), but its planner still learns from open-loop plan scores.
-      An open-loop score is not the closed-loop score of the driven trajectory, because the tracker follows only the beginning of each plan.
+      Existing methods do not train the planner on closed-loop scores.
+      They score whole plans in open loop, in logged states (a) or in states from closed-loop rollouts (b, PlannerRFT).
+      An open-loop score is not the closed-loop score of the driven trajectory.
     </li>
   </ul>
   <figure>

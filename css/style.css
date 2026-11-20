@@ -111,7 +111,7 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 
 /* ---------- difficulty 1 ---------- */
 .dn { margin: 14px 0 10px; }
-.dn-row { display: grid; grid-template-columns: 190px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.dn-row { display: grid; grid-template-columns: 215px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 .dn-label { font-weight: 600; color: var(--ink); }
 .dn-label small { display: block; font-weight: 400; color: var(--muted); }
 .dn-label small.space { display: inline-block; margin: 3px 0; padding: 1px 7px; border-radius: 3px; background: #ffe9a8; color: var(--ink); font-weight: 700; font-size: 0.85rem; }
@@ -140,7 +140,6 @@ input[type="range"] { width: 100%; accent-color: var(--orange); }
 .cells span { background: #c3c8d0; border-radius: 1px; }
 .cells span.executed { background: var(--ink); }
 .cells.two { grid-template-rows: repeat(2, 8px); }
-.cells.two em { grid-column: 2 / -1; grid-row: 1 / span 2; align-self: center; padding-left: 14px; font-style: normal; font-size: 0.8rem; color: var(--muted); }
 
 /* ---------- widget ---------- */
 .w-road { fill: var(--road); }
