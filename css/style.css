@@ -44,7 +44,11 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 /* ---------- header ---------- */
 .hero { text-align: center; padding-top: 56px; }
 .method-name { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-.authors { font-size: 1.1rem; margin-bottom: 2px; }
+.authors { font-size: 1.1rem; margin-bottom: 6px; }
+.authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
+.affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
+.hero sup { font-size: 0.7em; }
+.hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
 .links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
 .btn {
@@ -259,6 +263,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
 
 @media (max-width: 720px) {
   body { font-size: 16px; }
+  .authors br { display: none; }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
