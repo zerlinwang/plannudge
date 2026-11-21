@@ -37,8 +37,12 @@
     PlanNudge freezes a pretrained diffusion-based driving planner and trains a small MLP that nudges the speed and the curvature of each plan, so that standard off-policy RL can post-train the planner in closed loop.
     On nuPlan, PlanNudge matches or exceeds PlannerRFT, the state-of-the-art RL finetuning method for diffusion-based planners, in all six settings, with about one sixth of the environment steps and less than one fifth of the model compute.
   </div>
+  <figure class="teaser">
+    <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
+    <figcaption><b>A shift of paradigm.</b> Existing methods finetune the diffusion-based planner with open-loop scores (a, b). PlanNudge freezes the planner and nudges its plan with closed-loop feedback (c).</figcaption>
+  </figure>
   <div class="stats">
-    <div><em>Final score</em><b>6 of 6</b><span>nuPlan settings in which PlanNudge matches or exceeds the state of the art</span></div>
+    <div><em>Final score</em><b>SOTA</b><span>state-of-the-art closed-loop score in all 6 nuPlan settings</span></div>
     <div><em>Sample efficiency</em><b>30×</b><span>fewer environment steps to reach the Val14 R gain of PlannerRFT: 1.3 M against 40 M</span></div>
     <div><em>Compute efficiency</em><b>&lt; 1/5</b><span>of the model compute of PlannerRFT: 128 against at least 710 × 10<sup>15</sup> FLOPs</span></div>
   </div>
@@ -147,15 +151,9 @@
   <h3>How do existing methods handle the two difficulties?</h3>
   <ul class="handles">
     <li><b>Iterative denoising:</b> modeled as a Markov decision process, at the cost of a <em>K</em> times longer RL horizon.</li>
-    <li><b>Receding-horizon execution:</b> avoided. Plans are scored in open loop, in logged states (a) or, as PlannerRFT does, in states from closed-loop rollouts (b). An open-loop score is not the closed-loop score.</li>
+    <li><b>Receding-horizon execution:</b> avoided. Plans are scored in open loop, in logged states or, as PlannerRFT does, in states from closed-loop rollouts. An open-loop score is not the closed-loop score.</li>
   </ul>
   <p>All existing methods finetune the diffusion-based planner itself, which is where both difficulties arise.</p>
-  <details class="fold">
-    <summary>Figure: the three approaches (a), (b), (c)</summary>
-    <figure>
-      <img src="assets/figs/teaser_v6.svg" alt="Three approaches: open-loop finetuning from logs, open-loop finetuning from rollouts, and nudging the plan.">
-    </figure>
-  </details>
   <p class="question">Can we post-train a diffusion-based planner without finetuning it?</p>
 
   <h3>A first test: random nudges</h3>

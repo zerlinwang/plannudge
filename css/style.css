@@ -65,6 +65,8 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .tldr strong { color: var(--orange); margin-right: 6px; }
 #tldr { margin-top: 40px; }
 #tldr .stats { margin: 16px 0 0; }
+.teaser { margin: 22px 0 26px; }
+.teaser figcaption { text-align: center; font-size: 0.95rem; color: var(--text); }
 
 /* ---------- overlay on the top video ---------- */
 .video-overlay { position: relative; container-type: inline-size; }
