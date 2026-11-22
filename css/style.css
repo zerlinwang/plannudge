@@ -51,6 +51,7 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px 48px; margin: 24px 0 22px; }
 .logos img { height: 72px; width: auto; }
 .logos img.tall { height: 88px; }
+.logos .row-break { flex-basis: 100%; height: 0; }
 /* the full name under the BOLD logo; it does not change the position of the logo in the row */
 .logos a.named { position: relative; text-decoration: none; }
 .logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 2px; white-space: nowrap; font-size: 0.68rem; font-weight: 600; color: #012956; }
@@ -274,6 +275,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
   .authors br { display: none; }
   .affiliations span { white-space: normal; }
   .logos { gap: 36px 28px; }
+  .logos .row-break { display: none; }
   .logos a.named span { font-size: 0.6rem; white-space: normal; width: 125%; text-align: center; line-height: 1.25; }
   .logos img { height: 44px; }
   .logos img.tall { height: 54px; }
