@@ -269,6 +269,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
 @media (max-width: 720px) {
   body { font-size: 16px; }
   .authors br { display: none; }
+  .affiliations span { white-space: normal; }
   .logos { gap: 14px 28px; }
   .logos img { height: 44px; }
   .logos img.tall { height: 54px; }
