@@ -48,14 +48,15 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
 .affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
 .hero sup { font-size: 0.7em; }
-.logos { --k: 1; display: grid; grid-template-columns: repeat(12, 1fr); max-width: 920px; margin: 26px auto 24px; gap: 50px 16px; align-items: center; justify-items: center; }
-.logos a { grid-column: span 3; display: flex; align-items: center; justify-content: center; }
-.logos a.main { grid-column: span 6; }   /* BOLD takes the left half of the first row; WhiRL and FLAIR, which are part of BOLD, stand beside it */
-.logos img { height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: 100%; }
-/* the full name under the BOLD logo; the logo is wider than this line */
-.logos a.named { position: relative; text-decoration: none; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.82rem; font-weight: 800; color: #038dd3; }
-.logos a.named span b { font-weight: 800; color: #01417c; }   /* the colors of bold-lab.ai */
+/* logo map: every position and size is relative to the width of the block, so the shape is the same at every screen width */
+.logos { position: relative; container-type: inline-size; max-width: 920px; aspect-ratio: 920 / 320; margin: 22px auto 20px; }
+.logos svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.logos ellipse { fill: none; stroke: #c3d3e6; stroke-width: 1.4; stroke-dasharray: 2 7; stroke-linecap: round; }
+.logos a { position: absolute; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%); transform: translate(-50%, -50%); display: block; padding: 0.9cqw 1.6cqw; background: #fff; text-decoration: none; }
+.logos img { display: block; height: calc(var(--h) / 920 * 100cqw); width: auto; max-width: none; }
+/* the full name under the BOLD logo, in the colors of bold-lab.ai; the logo is wider than this line */
+.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: -0.4cqw; padding: 0 0.6cqw; background: #fff; white-space: nowrap; font-size: 1.3cqw; font-weight: 800; color: #038dd3; }
+.logos a.named span b { font-weight: 800; color: #01417c; }
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
 .links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
@@ -275,8 +276,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
   body { font-size: 16px; }
   .authors br { display: none; }
   .affiliations span { white-space: normal; }
-  .logos { --k: 0.58; gap: 36px 8px; }
-  .logos a.named span { font-size: 0.52rem; white-space: normal; width: 100%; text-align: center; line-height: 1.2; text-wrap: balance; }
+  .logos a.named span { font-size: 2cqw; white-space: normal; width: 100%; padding: 0; text-align: center; line-height: 1.2; text-wrap: balance; }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
