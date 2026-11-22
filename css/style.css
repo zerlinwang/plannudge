@@ -48,13 +48,13 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
 .affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
 .hero sup { font-size: 0.7em; }
-.logos { --k: 1; display: grid; grid-template-columns: repeat(12, 1fr); max-width: 840px; margin: 26px auto 24px; gap: 40px 16px; align-items: center; justify-items: center; }
+.logos { --k: 1; display: grid; grid-template-columns: repeat(12, 1fr); max-width: 920px; margin: 26px auto 24px; gap: 44px 16px; align-items: center; justify-items: center; }
 .logos a { grid-column: span 4; display: flex; align-items: center; justify-content: center; }   /* first row: 3 logos */
 .logos a.r2 { grid-column: span 3; }                                                             /* second row: 4 logos */
 .logos img { height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: 100%; }
 /* the full name under the BOLD logo; the logo is wider than this line */
 .logos a.named { position: relative; text-decoration: none; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.66rem; font-weight: 500; color: #8794a8; }
+.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.74rem; font-weight: 500; color: #8794a8; }
 .logos a.named span b { font-weight: 800; color: #012956; }
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
@@ -276,7 +276,7 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
   .authors br { display: none; }
   .affiliations span { white-space: normal; }
   .logos { --k: 0.58; gap: 36px 8px; }
-  .logos a.named span { font-size: 0.52rem; white-space: normal; width: 100%; text-align: center; line-height: 1.2; }
+  .logos a.named span { font-size: 0.52rem; white-space: normal; width: 100%; text-align: center; line-height: 1.2; text-wrap: balance; }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
