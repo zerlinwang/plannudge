@@ -48,13 +48,12 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
 .affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
 .hero sup { font-size: 0.7em; }
-.logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px 48px; margin: 24px 0 22px; }
-.logos img { height: 72px; width: auto; }
-.logos img.tall { height: 88px; }
-.logos .row-break { flex-basis: 100%; height: 0; }
-/* the full name under the BOLD logo; it does not change the position of the logo in the row */
+.logos { --k: 1; display: grid; grid-template-columns: repeat(3, 1fr); max-width: 760px; margin: 26px auto 22px; gap: 26px 20px; align-items: center; justify-items: center; }
+.logos a { display: flex; align-items: center; justify-content: center; height: calc(70px * var(--k)); }
+.logos img { height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: 100%; }
+/* the full name under the BOLD logo; it does not change the position of the logo in its cell */
 .logos a.named { position: relative; text-decoration: none; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 2px; white-space: nowrap; font-size: 0.68rem; font-weight: 600; color: #012956; }
+.logos a.named span { position: absolute; top: calc(50% + var(--k) * 26px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 0.66rem; font-weight: 600; color: #012956; }
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
 .links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
@@ -274,11 +273,8 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
   body { font-size: 16px; }
   .authors br { display: none; }
   .affiliations span { white-space: normal; }
-  .logos { gap: 36px 28px; }
-  .logos .row-break { display: none; }
-  .logos a.named span { font-size: 0.6rem; white-space: normal; width: 125%; text-align: center; line-height: 1.25; }
-  .logos img { height: 44px; }
-  .logos img.tall { height: 54px; }
+  .logos { --k: 0.62; gap: 30px 10px; }
+  .logos a.named span { font-size: 0.55rem; white-space: normal; width: 130px; text-align: center; line-height: 1.2; top: calc(50% + 17px); }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
