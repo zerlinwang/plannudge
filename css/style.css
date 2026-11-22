@@ -48,14 +48,14 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
 .affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
 .hero sup { font-size: 0.7em; }
-.logos { --k: 1; display: grid; grid-template-columns: repeat(12, 1fr); max-width: 920px; margin: 26px auto 24px; gap: 44px 16px; align-items: center; justify-items: center; }
-.logos a { grid-column: span 4; display: flex; align-items: center; justify-content: center; }   /* first row: 3 logos */
-.logos a.r2 { grid-column: span 3; }                                                             /* second row: 4 logos */
+.logos { --k: 1; display: grid; grid-template-columns: repeat(12, 1fr); max-width: 920px; margin: 26px auto 24px; gap: 50px 16px; align-items: center; justify-items: center; }
+.logos a { grid-column: span 3; display: flex; align-items: center; justify-content: center; }
+.logos a.main { grid-column: span 6; }   /* BOLD takes the left half of the first row; WhiRL and FLAIR, which are part of BOLD, stand beside it */
 .logos img { height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: 100%; }
 /* the full name under the BOLD logo; the logo is wider than this line */
 .logos a.named { position: relative; text-decoration: none; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.74rem; font-weight: 500; color: #8794a8; }
-.logos a.named span b { font-weight: 800; color: #012956; }
+.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.82rem; font-weight: 800; color: #038dd3; }
+.logos a.named span b { font-weight: 800; color: #01417c; }   /* the colors of bold-lab.ai */
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
 .links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
