@@ -54,7 +54,8 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .logos img { height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: 100%; }
 /* the full name under the BOLD logo; the logo is wider than this line */
 .logos a.named { position: relative; text-decoration: none; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.66rem; font-weight: 600; color: #012956; }
+.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; font-size: 0.66rem; font-weight: 500; color: #8794a8; }
+.logos a.named span b { font-weight: 800; color: #012956; }
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
 .links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
