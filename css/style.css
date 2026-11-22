@@ -48,9 +48,9 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
 .affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
 .hero sup { font-size: 0.7em; }
-.logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px 36px; margin: 22px 0 16px; }
-.logos img { height: 56px; width: auto; }
-.logos img.tall { height: 68px; }
+.logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px 48px; margin: 24px 0 18px; }
+.logos img { height: 72px; width: auto; }
+.logos img.tall { height: 88px; }
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
 .links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
@@ -269,8 +269,9 @@ footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 3
 @media (max-width: 720px) {
   body { font-size: 16px; }
   .authors br { display: none; }
-  .logos img { height: 40px; }
-  .logos img.tall { height: 50px; }
+  .logos { gap: 14px 28px; }
+  .logos img { height: 44px; }
+  .logos img.tall { height: 54px; }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
