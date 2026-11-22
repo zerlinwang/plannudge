@@ -50,12 +50,10 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .hero sup { font-size: 0.7em; }
 /* affiliation logos in two lines */
 .logos { --k: 1; margin: 24px auto 22px; display: grid; gap: calc(34px * var(--k)); justify-items: center; }
-.logo-row { display: flex; align-items: center; justify-content: center; gap: calc(26px * var(--k)); }
+.logo-row { display: flex; align-items: center; justify-content: center; gap: calc(52px * var(--k)); }
 .logo-row.second { gap: calc(54px * var(--k)); }
 .logo-row a { display: block; text-decoration: none; }
 .logos img { display: block; height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: none; }
-.logo-group { display: flex; align-items: center; gap: calc(14px * var(--k)); }
-.logo-group i { font-style: normal; font-weight: 200; font-size: calc(86px * var(--k)); line-height: 1; color: #b9c5d6; margin-top: calc(-10px * var(--k)); }
 /* the full name under the BOLD logo, in the colors of bold-lab.ai */
 .logos a.named { position: relative; }
 .logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: calc(-6px * var(--k)); white-space: nowrap; font-size: calc(10.6px * var(--k)); font-weight: 800; color: #038dd3; }
