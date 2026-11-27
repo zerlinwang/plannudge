@@ -23,9 +23,10 @@ body {
   font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 main, .hero { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+.hero { max-width: 1140px; }
 section { margin: 64px 0; }
 h1, h2, h3 { color: var(--ink); line-height: 1.25; text-wrap: balance; }
-h1 { font-size: clamp(1.7rem, 4.4vw, 2.6rem); margin: 0 0 18px; }
+h1 { font-size: clamp(1.8rem, 5vw, 3.1rem); margin: 0 0 22px; }
 h2 { font-size: 1.7rem; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
 h3 { font-size: 1.15rem; margin: 28px 0 8px; }
 p { margin: 0 0 14px; }
@@ -44,21 +45,20 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 /* ---------- header ---------- */
 .hero { text-align: center; padding-top: 56px; }
 .method-name { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-.authors { font-size: 1.1rem; margin-bottom: 6px; }
+.authors { font-size: 1.28rem; line-height: 1.75; margin-bottom: 4px; }
 .authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
 .authors a { color: var(--blue); text-decoration: none; }
 .authors a:hover { text-decoration: underline; }
-.affiliations { font-size: 0.98rem; color: var(--text); margin-bottom: 6px; }
+.footnotes { font-size: 0.8rem; font-style: italic; color: var(--muted); margin-bottom: 10px; }
+.affiliations { font-size: 1.14rem; color: var(--text); margin-bottom: 6px; }
 .hero sup { font-size: 0.7em; }
-/* affiliation logos in two lines */
-.logos { --k: 1; margin: 24px auto 22px; display: grid; gap: calc(38px * var(--k)); justify-items: center; }
-.logo-row { display: flex; align-items: center; justify-content: center; gap: calc(60px * var(--k)); }
-.logo-row.second { gap: calc(64px * var(--k)); }
-.logo-row a { display: block; text-decoration: none; }
+/* affiliation logos in one line */
+.logos { --k: 0.9; margin: 26px auto 34px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: calc(34px * var(--k)) calc(46px * var(--k)); }
+.logos a { display: block; text-decoration: none; }
 .logos img { display: block; height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: none; }
 /* the full name under the BOLD logo, in the colors of bold-lab.ai */
 .logos a.named { position: relative; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: calc(-6px * var(--k)); white-space: nowrap; font-size: calc(9.8px * var(--k)); font-weight: 800; color: #038dd3; }
+.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: calc(-4px * var(--k)); white-space: nowrap; font-size: calc(9px * var(--k)); font-weight: 800; color: #038dd3; }
 .logos a.named span b { font-weight: 800; color: #01417c; }
 .hero .venue { font-size: 0.88rem; }
 .venue { color: var(--muted); }
@@ -275,11 +275,16 @@ table.small-table tbody tr td:first-child { text-align: left; }
 pre { background: var(--panel); border-radius: 8px; padding: 16px; overflow-x: auto; font-size: 0.85rem; }
 footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 30px 20px 50px; border-top: 1px solid var(--line); }
 
+/* the logo line stays one line: its size follows the window width */
+@media (min-width: 1240px) { .logos { --k: 1; } }
+@media (max-width: 1040px) { .logos { --k: 0.74; } }
+@media (max-width: 860px) { .logos { --k: 0.6; } }
+
 @media (max-width: 720px) {
   body { font-size: 16px; }
   .authors br { display: none; }
   .affiliations span { white-space: normal; }
-  .logos { --k: 0.5; }
+  .logos { --k: 0.62; }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
