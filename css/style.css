@@ -42,27 +42,29 @@ figure video { border: 1px solid var(--line); background: #fff; }
 figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top: 8px; }
 .accent { color: var(--orange); }
 
-/* ---------- header ---------- */
-.hero { text-align: center; padding-top: 56px; }
-.method-name { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-.authors { font-size: 1.28rem; line-height: 1.75; margin-bottom: 4px; }
-.authors span, .affiliations span { display: inline-block; white-space: nowrap; margin: 0 9px; }
-.authors a { color: var(--blue); text-decoration: none; }
+/* ---------- header, in the format of the NOMAD project page ---------- */
+.hero { text-align: center; padding-top: 48px; font-family: "Noto Sans", sans-serif; }
+/* the title sets the width of this block; the other parts take that width */
+.hero-inner { display: inline-block; max-width: 100%; }
+.hero-inner > :not(h1) { width: 0; min-width: 100%; }
+.hero h1 { font-family: "Google Sans", sans-serif; font-weight: 600; font-size: clamp(1.55rem, 4.7vw, 3.5rem); line-height: 1.13; color: #363636; margin: 0 0 26px; text-wrap: nowrap; }
+.authors { font-family: "Google Sans", sans-serif; font-size: 1.25rem; line-height: 1.7; margin-bottom: 4px; color: #4a4a4a; }
+.authors span { display: inline-block; white-space: nowrap; margin: 0 2px; }
+.authors a { color: hsl(204, 86%, 53%); text-decoration: none; }
 .authors a:hover { text-decoration: underline; }
-.footnotes { font-size: 0.8rem; font-style: italic; color: var(--muted); margin-bottom: 10px; }
-.affiliations { font-size: 1.14rem; color: var(--text); margin-bottom: 6px; }
-.hero sup { font-size: 0.7em; }
-/* affiliation logos in one line */
-.logos { --k: 0.9; margin: 26px auto 34px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: calc(34px * var(--k)) calc(46px * var(--k)); }
-.logos a { display: block; text-decoration: none; }
-.logos img { display: block; height: calc(var(--h) * 1px * var(--k)); width: auto; max-width: none; }
+.footnotes { font-size: 0.72rem; font-style: italic; color: #a3a9b3; margin-bottom: 12px; }
+.affiliations { font-size: clamp(0.8rem, 1.42vw, 1.06rem); color: #4a4a4a; margin-bottom: 6px; }   /* follows the title size, so the four affiliations stay in one line */
+.affiliations span { display: inline-block; white-space: nowrap; margin: 0 7px; }
+.hero sup { font-size: 0.68em; }
+/* affiliation logos: one row, as wide as the title */
+.logos { display: flex; align-items: center; justify-content: space-between; margin: 26px 0 34px; }
+.logos a { flex: 0 0 calc(var(--w) * 1%); display: block; text-decoration: none; }
+.logos img { display: block; width: 100%; height: auto; }
 /* the full name under the BOLD logo, in the colors of bold-lab.ai */
-.logos a.named { position: relative; }
-.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: calc(-4px * var(--k)); white-space: nowrap; font-size: calc(9px * var(--k)); font-weight: 800; color: #038dd3; }
+.logos a.named { position: relative; container-type: inline-size; }
+.logos a.named span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: -1.5cqw; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 4.3cqw; font-weight: 800; color: #038dd3; }
 .logos a.named span b { font-weight: 800; color: #01417c; }
-.hero .venue { font-size: 0.88rem; }
-.venue { color: var(--muted); }
-.links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.links { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
 .btn {
   display: inline-block; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--ink);
   background: #fff; color: var(--ink); font: inherit; font-size: 0.95rem; text-decoration: none; cursor: pointer;
@@ -72,6 +74,10 @@ figcaption, .caption, .note { font-size: 0.9rem; color: var(--muted); margin-top
 .btn.primary:hover { filter: brightness(0.95); }
 .btn.soon { color: var(--muted); border-color: var(--line); cursor: default; }
 .btn.soon:hover { background: #fff; }
+
+.links .btn { background: #363636; border-color: transparent; color: #fff; padding: 9px 22px; }
+.links .btn:hover { background: #292929; }
+.links .btn.soon { background: #363636; color: #fff; opacity: 0.45; }
 
 .tldr { background: var(--orange-soft); border-left: 4px solid var(--orange); border-radius: 6px; padding: 16px 20px; font-size: 1.05rem; }
 .tldr strong { color: var(--orange); margin-right: 6px; }
@@ -275,16 +281,13 @@ table.small-table tbody tr td:first-child { text-align: left; }
 pre { background: var(--panel); border-radius: 8px; padding: 16px; overflow-x: auto; font-size: 0.85rem; }
 footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 30px 20px 50px; border-top: 1px solid var(--line); }
 
-/* the logo line stays one line: its size follows the window width */
-@media (min-width: 1240px) { .logos { --k: 1; } }
-@media (max-width: 1040px) { .logos { --k: 0.74; } }
-@media (max-width: 860px) { .logos { --k: 0.6; } }
-
 @media (max-width: 720px) {
-  body { font-size: 16px; }
-  .authors br { display: none; }
+  .hero h1 br { display: none; }
+  .hero h1 { text-wrap: balance; }
+  .authors { font-size: 1.05rem; }
+  .affiliations { font-size: 0.98rem; }
   .affiliations span { white-space: normal; }
-  .logos { --k: 0.62; }
+  body { font-size: 16px; }
   .two-col, .controls, .stats, .fig-row, .takeaways, .facts.pair { grid-template-columns: 1fr; }
   .dn-row { grid-template-columns: 1fr; }
   section { margin: 44px 0; }
